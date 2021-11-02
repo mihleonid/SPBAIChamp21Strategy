@@ -13,8 +13,12 @@ using namespace std;
 #define BotSet dict<Specialty, int>
 #ifdef NDEBUG
 #define log(X) ;
+#define waring(X) ;
+#define waring(X, Y) ;
 #else
 #define log(X) cout<<(X)<<endl;
+#define warning(X) if(X){cout<<__FILE__<<':'<<__LINE__<<<<" "<<(#X)<<" warning!"<<endl;}
+#define warning(X, Y) if(X){cout<<__FILE__<<':'<<__LINE__<<<<" "<<(Y)<<endl;}
 #endif
 using Specialty::LOGISTICS;
 using Specialty::PRODUCTION;

@@ -56,7 +56,8 @@ set (SRC
     "strategy/graph.cpp"
     "strategy/GameWrapper.cpp"
 )
-set(CMAKE_CXX_FLAGS " -g -ggdb -O0  -fsanitize=undefined -D_GLIBCXX_DEBUG")
+set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
+#set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")
 SET_SOURCE_FILES_PROPERTIES(${HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 include_directories(".")
 add_executable(spb_ai_champ ${HEADERS} ${SRC})

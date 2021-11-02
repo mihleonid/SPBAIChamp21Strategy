@@ -1,6 +1,7 @@
 #pragma once
 #include "bits/stdc++.h"
 #include "MyStrategy.hpp"
+#include "model/Specialty.hpp"
 using namespace model;
 using namespace std;
 #define int long long
@@ -15,12 +16,13 @@ using namespace std;
 #else
 #define log(X) cout<<(X)<<endl;
 #endif
-using Speciality::LOGISTICS;
-using Speciality::PRODUCTION;
-using Speciality::COMBAT;
+using Specialty::LOGISTICS;
+using Specialty::PRODUCTION;
+using Specialty::COMBAT;
 template<typename T> bool rmax(T& a, T b); // a=max(a, b); return 1, if there was replace, and 0 if not
 template<typename T> bool rmin(T& a, T b); // Analog
 template<typename T> T mabs(T a); // Math absolute funcition
+template<typename T, typename U> dict<T, int> to_ll(const dict<T, U>&); // converts from [T->int] to [T->long long]
 
 // Template realization
 template<typename T> T mabs(T a){
@@ -40,3 +42,10 @@ template<typename T> bool rmax(T& a, T b){
 	}
 	return 0;
 };
+template<typename T, typename U> dict<T, int> to_ll(const dict<T, U>& in){
+	dict<T, int> ans;
+	for(const auto& p:in){
+		ans[p.first]=p.second;
+	}
+	return ans;
+}

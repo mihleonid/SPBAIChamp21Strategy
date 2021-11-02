@@ -28,7 +28,7 @@ void GW::update(const Game& g){
 		(is_player_evil(idx)?theirFlyingBots:ourFlyingBots)[get_specialty(idx)]+=fwg.number;
 	}
 	for(int i=0;i<N;++i){
-		resources[i]=g.planets[i].resources;
+		resources[i]=to_ll(g.planets[i].resources);
 		BotSet total_we, total_they;
 		for(auto wg:g.planets[i].workerGroups){
 			(is_player_evil(wg.playerIndex)?total_they:total_we)[get_specialty(wg.playerIndex)]+=wg.number;
@@ -39,7 +39,7 @@ void GW::update(const Game& g){
 void GW::init(){
 	ourBots.resize(game->planets.size());
 	theirBots.resize(game->planets.size());
-	resource.resize(game->planets.size());
+	resources.resize(game->planets.size());
 	init_graph(*game);
 }
 int GW::get_tick(){
@@ -70,8 +70,8 @@ bool GW::is_player_good(int idx){
 	return !is_player_evil(idx);
 }
 Specialty GW::get_specialty(int idx){
-	assert((g.players[idx].specialty)&&"The specialty must exits. Use this function only if tick>=3");
-	mySpecialty=g.players[idx].specialty.value();
+	assert((game->players[idx].specialty)&&"The specialty must exits. Use this function only if tick>=3");
+	return game->players[idx].specialty.value();
 }
 Specialty GW::get_my_specialty(){
 	return get_specialty(get_my_index());
@@ -85,7 +85,7 @@ int GW::who_can_evil(Specialty s){
 int GW::get_team(int idx){
 	return game->players[idx].teamIndex;
 }
-pair<BotSet, BotSet> battle(BotSet a, BotSet b){
+pair<BotSet, BotSet> GW::battle(BotSet a, BotSet b){
 	return {a, b}; // TODO Real battle so on one of BotSets will be 0,0,0
 }
 #undef GW

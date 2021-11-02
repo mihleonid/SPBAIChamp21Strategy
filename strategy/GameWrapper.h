@@ -11,9 +11,9 @@ class GameWrapper{
 		dict<Specialty, int> whoCanEvil;
 		BotSet ourFlyingBots;
 		BotSet theirFlyingBots;
-		vector<BotSet> ourBots;
+		vector<BotSet> ourBots; // Bots on planets, battle and done actions excluded.
 		vector<BotSet> theirBots;
-		vector<ResSet> resources;
+		vector<ResSet> resources; // Resources on planets, used excluded
 	public:
 		GameWrapper();
 		void update(const Game&);

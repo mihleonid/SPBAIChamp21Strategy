@@ -55,6 +55,7 @@ set (SRC
 
     "strategy/graph.cpp"
     "strategy/GameWrapper.cpp"
+    "strategy/tasks.cpp"
 )
 set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
 #set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")

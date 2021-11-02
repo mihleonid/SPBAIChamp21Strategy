@@ -24,6 +24,8 @@ template<typename T> bool rmin(T& a, T b); // Analog
 template<typename T> T mabs(T a); // Math absolute funcition
 template<typename T, typename U> dict<T, int> to_ll(const dict<T, U>&); // converts from [T->int] to [T->long long]
 template<typename T, typename U> U sum(const dict<T, U>&); // sums value
+int mrand(); // Get determinic random for all the runs;
+template<class RandomIt> void mrandom_shuffle(RandomIt first, RandomIt last);
 
 // Template realization
 template<typename T> T mabs(T a){
@@ -56,4 +58,11 @@ template<typename T, typename U> U sum(const dict<T, U>& in){
 		ans+=p.second;
 	}
 	return ans;
+}
+template<class RandomIt> void mrandom_shuffle(RandomIt first, RandomIt last){
+	typename std::iterator_traits<RandomIt>::difference_type i, n;
+	n=last-first;
+	for(i=n-1;i>0;--i){
+		swap(first[i], first[mrand()%(i+1)]);
+	}
 }

@@ -8,6 +8,16 @@ using namespace std;
 #define vvi vector<vi>
 #define INF 100000000000000LL
 #define dict unordered_map
+#define ResSet dict<Resource, int>
+#define BotSet dict<Specialty, int>
+#ifdef NDEBUG
+#define log(X) ;
+#else
+#define log(X) cout<<(X)<<endl;
+#endif
+using Speciality::LOGISTICS;
+using Speciality::PRODUCTION;
+using Speciality::COMBAT;
 template<typename T> bool rmax(T& a, T b); // a=max(a, b); return 1, if there was replace, and 0 if not
 template<typename T> bool rmin(T& a, T b); // Analog
 template<typename T> T mabs(T a); // Math absolute funcition

@@ -39,7 +39,8 @@ class GameWrapper{
 
 		int reserve_bot(int planet, int cnt, Specialty); // Reserves bots and returnes rest that was not reserved
 		void reserve_res(int planet, int cnt,  Resource); // Reserves resources or crash
-		int get_all_our_bots(int planet); // Return sum of ourBots
+		int get_all_our_bots(int planet); // Return sum of ourBots on planet
+		int get_all_their_bots(int planet);
 
 		void add_move(int from, int to, int who);
 		void add_move(int from, int to, int who, int when);

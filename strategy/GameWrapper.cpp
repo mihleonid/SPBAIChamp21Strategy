@@ -37,6 +37,7 @@ void GW::update(const Game& g){
 	}
 }
 void GW::init(){
+	availFly.resize(game->planets.size());
 	ourBots.resize(game->planets.size());
 	theirBots.resize(game->planets.size());
 	resources.resize(game->planets.size());
@@ -86,6 +87,9 @@ int GW::who_can_evil(Specialty s){
 int GW::get_all_our_bots(int planet){
 	return sum(ourBots[planet]);
 }
+int GW::get_all_their_bots(int planet){
+	return sum(theirBots[planet]);
+}
 int GW::get_team(int idx){
 	return game->players[idx].teamIndex;
 }
@@ -101,10 +105,13 @@ void GW::add_move(int from, int to, int who, Resource r){
 void GW::add_move(int from, int to, int who, int when, Resource r){
 }
 int GW::our_might(int pl){
-	return 0;
-	//return get_all_our_bots(pl)+ourBots[pl][COMBAT]*;
+	return get_all_our_bots(pl)+(ourBots[pl][COMBAT]*game->combatUpgrade)/100;
 }
-pair<BotSet, BotSet> GW::battle(BotSet a, BotSet b){
-	return {a, b}; // TODO Real battle so on one of BotSets will be 0,0,0
+int GW::their_might(int pl){
+	return get_all_their_bots(pl)+(theirBots[pl][COMBAT]*game->combatUpgrade)/100;
+}
+pair<BotSet, BotSet> GW::battle(BotSet we, BotSet they){
+	//Если что, то нас могут поколотить - лучше перебдеть и распределить всем нашим округление урона вверх.
+	return {we, they}; // TODO Real battle so on one of BotSets will be 0,0,0
 }
 #undef GW

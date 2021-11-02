@@ -14,13 +14,13 @@ using namespace std;
 #ifdef NDEBUG
 #define log(X) ;
 #define waring() ;
-#define waring(X) ;
-#define waring(X, Y) ;
+#define waring_if(X) ;
+#define waring_if_msg(X, Y) ;
 #else
 #define log(X) cout<<(X)<<endl;
 #define warning() {cout<<__FILE__<<':'<<__LINE__<<" warning!"<<endl;}
-#define warning(X) if(X){cout<<__FILE__<<':'<<__LINE__<<" "<<(#X)<<" warning!"<<endl;}
-#define warning(X, Y) if(X){cout<<__FILE__<<':'<<__LINE__<<" "<<(Y)<<endl;}
+#define warning_if(X) if(X){cout<<__FILE__<<':'<<__LINE__<<" "<<(#X)<<" warning!"<<endl;}
+#define warning_if_msg(X, Y) if(X){cout<<__FILE__<<':'<<__LINE__<<" "<<(Y)<<endl;}
 #endif
 using Specialty::LOGISTICS;
 using Specialty::PRODUCTION;

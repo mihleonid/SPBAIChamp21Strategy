@@ -42,6 +42,7 @@ void GW::init(){
 	resources.resize(game->planets.size());
 	init_graph(*game);
 }
+//region Obvious function
 int GW::get_tick(){
 	return game->currentTick;
 }
@@ -82,8 +83,26 @@ int GW::who_can(Specialty s){
 int GW::who_can_evil(Specialty s){
 	return whoCanEvil[s];
 }
+int GW::get_all_our_bots(int planet){
+	return sum(ourBots[planet]);
+}
 int GW::get_team(int idx){
 	return game->players[idx].teamIndex;
+}
+//endregion
+void GW::add_move(int from, int to, int who){
+	add_move(from, to, who, get_tick());
+}
+void GW::add_move(int from, int to, int who, int when){
+}
+void GW::add_move(int from, int to, int who, Resource r){
+	add_move(from, to, who, get_tick(), r);
+}
+void GW::add_move(int from, int to, int who, int when, Resource r){
+}
+int GW::our_might(int pl){
+	return 0;
+	//return get_all_our_bots(pl)+ourBots[pl][COMBAT]*;
 }
 pair<BotSet, BotSet> GW::battle(BotSet a, BotSet b){
 	return {a, b}; // TODO Real battle so on one of BotSets will be 0,0,0

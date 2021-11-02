@@ -23,6 +23,7 @@ template<typename T> bool rmax(T& a, T b); // a=max(a, b); return 1, if there wa
 template<typename T> bool rmin(T& a, T b); // Analog
 template<typename T> T mabs(T a); // Math absolute funcition
 template<typename T, typename U> dict<T, int> to_ll(const dict<T, U>&); // converts from [T->int] to [T->long long]
+template<typename T, typename U> U sum(const dict<T, U>&); // sums value
 
 // Template realization
 template<typename T> T mabs(T a){
@@ -46,6 +47,13 @@ template<typename T, typename U> dict<T, int> to_ll(const dict<T, U>& in){
 	dict<T, int> ans;
 	for(const auto& p:in){
 		ans[p.first]=p.second;
+	}
+	return ans;
+}
+template<typename T, typename U> U sum(const dict<T, U>& in){
+	U ans=U();
+	for(const auto& p:in){
+		ans+=p.second;
 	}
 	return ans;
 }

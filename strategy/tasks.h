@@ -10,9 +10,3 @@ struct MoveTask{
 	MoveTask(int start, int target, int who, Resource);
 	MoveTask(int start, int target, int who, optional<Resource>);
 };
-struct BuildTask{ // if we leave empty then it will be destroy task
-	optional<BuildingType> type;
-	BuildTask();
-	BuildTask(BuildingType);
-	BuildTask(optional<BuildingType>);
-};

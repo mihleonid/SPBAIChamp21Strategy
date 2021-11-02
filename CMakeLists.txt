@@ -52,7 +52,10 @@ set (SRC
     "model/Resource.cpp"
     "model/Specialty.cpp"
     "model/WorkerGroup.cpp"
+
+    "graph.cpp"
 )
+set(CMAKE_CXX_FLAGS " -g -ggdb -O0  -fsanitize=undefined -D_GLIBCXX_DEBUG")
 SET_SOURCE_FILES_PROPERTIES(${HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 include_directories(".")
 add_executable(spb_ai_champ ${HEADERS} ${SRC})

@@ -34,25 +34,30 @@ namespace graph {
 	}
 
 	void dijkstra(int from, const vvi &neib, vvi &d, vvi &nexts) {
-		vector<char> used(N);
+		vector<int> vertices_on_path(N, INF); // number of vertices on path [from..i]
+		set<pair<int, int>> open;             // set of pairs <distance, vertex>
+
+		open.insert({0, from});
+		vertices_on_path[from] = 0;
 		d[from][from] = 0;
 		nexts[from][from] = from;
-		set<pair<int, int>> open;
-		open.insert({0, from});
-		while (open.size()) {
-			auto p = *(open.begin());
-			open.erase(p);
-			if (used[p.second]) {
-				continue;
-			}
-			used[p.second] = 1;
-			for (int nei: neib[p.second]) {
-				if (used[nei]) {
-					continue;
+
+		while (!open.empty()) {
+			int u = open.begin()->second;
+			open.erase(open.begin());
+
+			for (int p : neib[u]) {  // find ancestor with minimum vertices on path [from..p]
+				if (d[from][p] + line_dist(p, u) == d[from][u] && vertices_on_path[p] + 1 < vertices_on_path[u]) {
+					nexts[u][from] = p;
+					vertices_on_path[u] = vertices_on_path[p] + 1;
 				}
-				if (rmin(d[from][nei], d[from][p.second] + line_dist(p.second, nei))) {
-					nexts[nei][from] = p.second;
-					open.insert({d[from][nei], nei});
+			}
+
+			for (int v: neib[u]) {
+				if (d[from][u] + line_dist(u, v) < d[from][v]) {
+					open.erase({d[from][v], v});
+					d[from][v] = d[from][u] + line_dist(u, v);
+					open.insert({d[from][v], v});
 				}
 			}
 		}

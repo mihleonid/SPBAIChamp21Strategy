@@ -6,6 +6,7 @@ class GameWrapper{
 		bool inited;
 		void init();
 		dict<Specialty, int> availFly;
+		int ourScore, theirScore;
 	public:
 		GameWrapper();
 		void update(const Game&);
@@ -14,4 +15,6 @@ class GameWrapper{
 		int get_my_index();
 		Specialty get_my_specialty();
 		int get_our_team();
+		int get_our_score();
+		int get_their_score();
 };

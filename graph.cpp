@@ -1,8 +1,6 @@
 #include "graph.h"
 namespace graph{
-	const Game* tmp;
 	int N;
-#define planets tmp->planets
 	vvi dists_any;
 	vvi nexts_any;
 	vvi dists_fast;
@@ -71,19 +69,16 @@ namespace graph{
 		return make_pair(dists, nexts);
 	}
 	void init_graph(const Game& g){
-		tmp=&g;
-		N=planets.size();
+		N=g.planets.size();
 		dists_line.resize(N, vi(N));
 		for(int a=0;a<N;++a){
 			for(int b=0;b<N;++b){
-				dists_line[a][b]=mabs(planets[a].x-planets[b].x) + mabs(planets[a].y-planets[b].y);
+				dists_line[a][b]=mabs(g.planets[a].x-g.planets[b].x) + mabs(g.planets[a].y-g.planets[b].y);
 			}
 		}
 		int max_any=g.maxTravelDistance;
 		int max_fast=max_any+g.logisticsUpgrade;
 		tie(dists_any, nexts_any)=calc_all(max_any);
 		tie(dists_fast, nexts_fast)=calc_all(max_fast);
-		tmp=nullptr;
 	}
-#undef planets
 };

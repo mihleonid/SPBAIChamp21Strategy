@@ -1,6 +1,6 @@
 #include "MyStrategy.hpp"
 #include <exception>
-#include "GameWrapper.h"
+#include "strategy/GameWrapper.h"
 
 GameWrapper gw;
 MyStrategy::MyStrategy() {}

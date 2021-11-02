@@ -54,6 +54,7 @@ set (SRC
     "model/WorkerGroup.cpp"
 
     "graph.cpp"
+    "GameWrapper.cpp"
 )
 set(CMAKE_CXX_FLAGS " -g -ggdb -O0  -fsanitize=undefined -D_GLIBCXX_DEBUG")
 SET_SOURCE_FILES_PROPERTIES(${HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)

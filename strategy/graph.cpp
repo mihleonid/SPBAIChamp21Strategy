@@ -12,7 +12,7 @@ namespace graph {
 
 	int any_dist(int fr, int to) { return dists_any[fr][to]; }
 
-	int fast_dist(int fr, int to) { return dists_any[fr][to]; }
+	int fast_dist(int fr, int to) { return dists_fast[fr][to]; }
 
 	int any_next(int fr, int to) { return nexts_any[fr][to]; }
 

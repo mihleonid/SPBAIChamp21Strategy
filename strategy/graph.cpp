@@ -1,4 +1,6 @@
+#include <set>
 #include "graph.h"
+#include "common.h"
 
 namespace graph {
 	int N;
@@ -35,7 +37,7 @@ namespace graph {
 
 	void dijkstra(int from, const vvi &neib, vvi &d, vvi &nexts) {
 		vector<int> vertices_on_path(N, INF); // number of vertices on path [from..i]
-		set<pair<int, int>> open;             // set of pairs <distance, vertex>
+		std::set<pair<int, int>> open;             // set of pairs <distance, vertex>
 
 		open.insert({0, from});
 		vertices_on_path[from] = 0;

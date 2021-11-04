@@ -1,7 +1,7 @@
 #include "Action.hpp"
 
 namespace model {
-
+Action::Action() : moves(), buildings(), chooseSpecialty(std::nullopt) {}
 Action::Action(std::vector<model::MoveAction> moves, std::vector<model::BuildingAction> buildings, std::optional<model::Specialty> chooseSpecialty) : moves(moves), buildings(buildings), chooseSpecialty(chooseSpecialty) { }
 
 // Read Action from input stream
@@ -82,6 +82,15 @@ std::string Action::toString() const {
     }
     ss << " }";
     return ss.str();
+}
+
+Action& Action::operator+=(const Action &other) {
+	for (const MoveAction& move_action : other.moves)
+		moves.push_back(move_action);
+	for (const BuildingAction& building_action : other.buildings)
+		buildings.push_back(building_action);
+
+	return *this;
 }
 
 }

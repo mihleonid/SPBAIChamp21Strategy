@@ -3,37 +3,37 @@
 #include <algorithm>
 
 void GameWrapper::update(const Game &g) {
-	game = g;
+	game = &g;
 
-	free_robots.resize(game.planets.size());
-	free_resources.resize(game.planets.size());
+	free_robots.resize(game->planets.size());
+	free_resources.resize(game->planets.size());
 
-	for (int planet_id = 0; planet_id < game.planets.size(); ++planet_id) {
+	for (int planet_id = 0; planet_id < game->planets.size(); ++planet_id) {
 		free_robots[planet_id].clear();
 		free_resources[planet_id].clear();
 
-		for (const WorkerGroup& worker_group : game.planets[planet_id].workerGroups) {
+		for (const WorkerGroup &worker_group: game->planets[planet_id].workerGroups) {
 			free_robots[planet_id][worker_group.playerIndex] += worker_group.number;
 		}
 
-		for (const auto& [resource, amount] : game.planets[planet_id].resources) {
+		for (const auto&[resource, amount]: game->planets[planet_id].resources) {
 			free_resources[planet_id][resource] += amount;
 		}
 	}
 
-	for (int player_id = 0; player_id < game.players.size(); ++player_id) {
+	for (int player_id = 0; player_id < game->players.size(); ++player_id) {
 		int current_flying_groups =
-			std::count_if(game.flyingWorkerGroups.begin(),
-						  game.flyingWorkerGroups.end(),
+			std::count_if(game->flyingWorkerGroups.begin(),
+						  game->flyingWorkerGroups.end(),
 						  [player_id](const FlyingWorkerGroup &group) { return group.playerIndex == player_id; });
-		available_flying_groups[player_id] = game.maxFlyingWorkerGroups - current_flying_groups;
+		available_flying_groups[player_id] = game->maxFlyingWorkerGroups - current_flying_groups;
 	}
 
-	for (int planet_id = 0; planet_id < game.planets.size(); ++planet_id) {
-		if (game.planets[planet_id].building.has_value()) {
-			Building building = game.planets[planet_id].building.value();
-			if (building.health == game.buildingProperties[building.buildingType].maxHealth) {
-				free_worker_place[planet_id] = game.buildingProperties[building.buildingType].maxWorkers;
+	for (int planet_id = 0; planet_id < game->planets.size(); ++planet_id) {
+		if (game->planets[planet_id].building.has_value()) {
+			Building building = game->planets[planet_id].building.value();
+			if (building.health == game->buildingProperties.at(building.buildingType).maxHealth) {
+				free_worker_place[planet_id] = game->buildingProperties.at(building.buildingType).maxWorkers;
 			} else {
 				free_worker_place[planet_id] = 0;
 			}
@@ -45,7 +45,7 @@ void GameWrapper::update(const Game &g) {
 
 int GameWrapper::getRobotCount(int planet_id, int player_id) const {
 	int robots = 0;
-	for (const WorkerGroup &worker_group: game.planets[planet_id].workerGroups) {
+	for (const WorkerGroup &worker_group: game->planets[planet_id].workerGroups) {
 		if (worker_group.playerIndex == player_id) {
 			robots += worker_group.number;
 		}
@@ -86,44 +86,44 @@ int GameWrapper::getEnemyTeamFreeRobotCount(int planet_id) const {
 
 int GameWrapper::getMyTotalRobotCount() const {
 	int res = 0;
-	for (int i = 0; i < game.planets.size(); ++i)
+	for (int i = 0; i < game->planets.size(); ++i)
 		res += getMyTeamRobotCount(i);
 	return res;
 }
 int GameWrapper::getMyTotalFreeRobotCount() const {
 	int res = 0;
-	for (int i = 0; i < game.planets.size(); ++i)
+	for (int i = 0; i < game->planets.size(); ++i)
 		res += getMyTeamFreeRobotCount(i);
 	return res;
 }
 
 int GameWrapper::getEnemyTotalRobotCount() const {
 	int res = 0;
-	for (int i = 0; i < game.planets.size(); ++i)
+	for (int i = 0; i < game->planets.size(); ++i)
 		res += getEnemyTeamRobotCount(i);
 	return res;
 }
 int GameWrapper::getEnemyTotalFreeRobotCount() const {
 	int res = 0;
-	for (int i = 0; i < game.planets.size(); ++i)
+	for (int i = 0; i < game->planets.size(); ++i)
 		res += getEnemyTeamFreeRobotCount(i);
 	return res;
 }
 
 int GameWrapper::getMyTeamScore() const {
 	int res = 0;
-	for (int i = 0; i < game.players.size(); ++i) {
+	for (int i = 0; i < game->players.size(); ++i) {
 		if (getPlayerTeamId(i) == getMyTeamId()) {
-			res += game.players[i].score;
+			res += game->players[i].score;
 		}
 	}
 	return res;
 }
 int GameWrapper::getEnemyTeamScore() const {
 	int result = 0;
-	for (int player_id = 0; player_id < game.players.size(); ++player_id) {
+	for (int player_id = 0; player_id < game->players.size(); ++player_id) {
 		if (isPlayerEnemy(player_id)) {
-			result += game.players[player_id].score;
+			result += game->players[player_id].score;
 		}
 	}
 	return result;
@@ -138,11 +138,11 @@ bool GameWrapper::isPlayerFriend(int player_id) const {
 }
 
 std::unordered_map<Resource, int> GameWrapper::getResourcesCount(int planet_id) const {
-	return game.planets[planet_id].resources;
+	return game->planets[planet_id].resources;
 }
 
 int GameWrapper::getEnemyTeamId() const {
-	for (int player_id = 0; player_id < game.players.size(); ++player_id) {
+	for (int player_id = 0; player_id < game->players.size(); ++player_id) {
 		if (isPlayerEnemy(player_id)) {
 			return getPlayerTeamId(player_id);
 		}
@@ -180,7 +180,7 @@ int GameWrapper::reserveResources(int planet_id, Resource resource, int cnt) {
 }
 
 int GameWrapper::getMyPlayerIdBySpecialty(Specialty specialty) const {
-	for (int player_id = 0; player_id < game.players.size(); ++player_id) {
+	for (int player_id = 0; player_id < game->players.size(); ++player_id) {
 		if (isPlayerFriend(player_id) && getPlayerSpecialty(player_id) == specialty)
 			return player_id;
 	}
@@ -188,7 +188,7 @@ int GameWrapper::getMyPlayerIdBySpecialty(Specialty specialty) const {
 }
 
 int GameWrapper::getEnemyPlayerIdBySpecialty(Specialty specialty) const {
-	for (int player_id = 0; player_id < game.players.size(); ++player_id) {
+	for (int player_id = 0; player_id < game->players.size(); ++player_id) {
 		if (isPlayerEnemy(player_id) && getPlayerSpecialty(player_id) == specialty)
 			return player_id;
 	}
@@ -197,9 +197,17 @@ int GameWrapper::getEnemyPlayerIdBySpecialty(Specialty specialty) const {
 
 int GameWrapper::getOurBattlePower(int planet_id) const {
 	return getMyTeamRobotCount(planet_id) +
-		(getMyRobotCount(planet_id, Specialty::COMBAT) * game.combatUpgrade) / 100;
+		(getMyRobotCount(planet_id, Specialty::COMBAT) * game->combatUpgrade) / 100;
 }
 int GameWrapper::getEnemyBattlePower(int planet_id) const {
 	return getEnemyTeamRobotCount(planet_id) +
-		(getEnemyRobotCount(planet_id, Specialty::COMBAT) * game.combatUpgrade) / 100;
+		(getEnemyRobotCount(planet_id, Specialty::COMBAT) * game->combatUpgrade) / 100;
 }
+
+
+
+
+/*pair<BotSet, BotSet> GameWrapper::battle(BotSet we, BotSet they){
+	//Если что, то нас могут поколотить - лучше перебдеть и распределить всем нашим округление урона вверх.
+	return {we, they}; // TODO Real battle so on one of BotSets will be 0,0,0
+}*/

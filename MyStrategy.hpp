@@ -1,17 +1,14 @@
-#ifndef _MY_STRATEGY_HPP_
-#define _MY_STRATEGY_HPP_
+#pragma once
 
 #include "model/Game.hpp"
 #include "model/Action.hpp"
 #include "strategy/GameWrapper.h"
+#include "strategy/Core.h"
 
 class MyStrategy {
 public:
-    MyStrategy();
     model::Action getAction(const model::Game& game);
 private:
-	GameWrapper gameWrapper;
-	// Core core;
+	Core core;
+	GameWrapper game_wrapper;
 };
-
-#endif

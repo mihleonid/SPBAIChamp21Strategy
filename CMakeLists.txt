@@ -4,8 +4,8 @@ project(spb_ai_champ)
 
 # OS and compiler checks.
 if(WIN32)
-    add_definitions(-DWIN32)
-    SET(PROJECT_LIBS Ws2_32.lib)
+	add_definitions(-DWIN32)
+	SET(PROJECT_LIBS Ws2_32.lib)
 endif()
 
 set(HEADERS
@@ -30,27 +30,27 @@ set(HEADERS
 	"model/Specialty.hpp"
 	"model/WorkerGroup.hpp")
 set (SRC
-    "MyStrategy.cpp"
-    "Stream.cpp"
-    "TcpStream.cpp"
-    "codegame/ClientMessage.cpp"
-    "codegame/ServerMessage.cpp"
-    "debugging/DebugCommand.cpp"
-    "main.cpp"
-    "model/Action.cpp"
-    "model/Building.cpp"
-    "model/BuildingAction.cpp"
-    "model/BuildingProperties.cpp"
-    "model/BuildingType.cpp"
-    "model/DebugData.cpp"
-    "model/FlyingWorkerGroup.cpp"
-    "model/Game.cpp"
-    "model/MoveAction.cpp"
-    "model/Planet.cpp"
-    "model/Player.cpp"
-    "model/Resource.cpp"
-    "model/Specialty.cpp"
-    "model/WorkerGroup.cpp"
+	"MyStrategy.cpp"
+	"Stream.cpp"
+	"TcpStream.cpp"
+	"codegame/ClientMessage.cpp"
+	"codegame/ServerMessage.cpp"
+	"debugging/DebugCommand.cpp"
+	"main.cpp"
+	"model/Action.cpp"
+	"model/Building.cpp"
+	"model/BuildingAction.cpp"
+	"model/BuildingProperties.cpp"
+	"model/BuildingType.cpp"
+	"model/DebugData.cpp"
+	"model/FlyingWorkerGroup.cpp"
+	"model/Game.cpp"
+	"model/MoveAction.cpp"
+	"model/Planet.cpp"
+	"model/Player.cpp"
+	"model/Resource.cpp"
+	"model/Specialty.cpp"
+	"model/WorkerGroup.cpp"
 
 	"strategy/GameWrapper.cpp"
 	"strategy/common.cpp"

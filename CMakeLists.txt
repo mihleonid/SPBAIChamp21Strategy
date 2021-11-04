@@ -9,27 +9,26 @@ if(WIN32)
 endif()
 
 set(HEADERS
-    "MyStrategy.hpp"
-    "Stream.hpp"
-    "TcpStream.hpp"
-    "codegame/ClientMessage.hpp"
-    "codegame/ServerMessage.hpp"
-    "debugging/DebugCommand.hpp"
-    "model/Action.hpp"
-    "model/Building.hpp"
-    "model/BuildingAction.hpp"
-    "model/BuildingProperties.hpp"
-    "model/BuildingType.hpp"
-    "model/DebugData.hpp"
-    "model/FlyingWorkerGroup.hpp"
-    "model/Game.hpp"
-    "model/MoveAction.hpp"
-    "model/Planet.hpp"
-    "model/Player.hpp"
-    "model/Resource.hpp"
-    "model/Specialty.hpp"
-    "model/WorkerGroup.hpp"
-)
+	"MyStrategy.hpp"
+	"Stream.hpp"
+	"TcpStream.hpp"
+	"codegame/ClientMessage.hpp"
+	"codegame/ServerMessage.hpp"
+	"debugging/DebugCommand.hpp"
+	"model/Action.hpp"
+	"model/Building.hpp"
+	"model/BuildingAction.hpp"
+	"model/BuildingProperties.hpp"
+	"model/BuildingType.hpp"
+	"model/DebugData.hpp"
+	"model/FlyingWorkerGroup.hpp"
+	"model/Game.hpp"
+	"model/MoveAction.hpp"
+	"model/Planet.hpp"
+	"model/Player.hpp"
+	"model/Resource.hpp"
+	"model/Specialty.hpp"
+	"model/WorkerGroup.hpp")
 set (SRC
     "MyStrategy.cpp"
     "Stream.cpp"
@@ -53,11 +52,10 @@ set (SRC
     "model/Specialty.cpp"
     "model/WorkerGroup.cpp"
 
-    "strategy/GameWrapper.cpp"
-    "strategy/common.cpp"
-    "strategy/graph.cpp"
-    "strategy/tasks/tasks.cpp"
-)
+	"strategy/GameWrapper.cpp"
+	"strategy/common.cpp"
+	"strategy/graph.cpp"
+    "strategy/Core.cpp" strategy/tasks/DestroyTask.cpp strategy/tasks/DestroyTask.h)
 set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
 #set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")
 SET_SOURCE_FILES_PROPERTIES(${HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)

@@ -11,6 +11,8 @@ class GameWrapper {
 public:
 	void update(const Game &);
 
+	inline const std::vector<Planet>& getPlanets() const { return game->planets; }
+
 	int getRobotCount(int planet_id, int player_id) const;
 	inline int getFreeRobotCount(int planet_id, int player_id) const { return free_robots[planet_id].at(player_id); }
 
@@ -61,9 +63,9 @@ public:
 	inline int getPlayerTeamId(int player_id) const { return game->players[player_id].teamIndex; }
 	inline int getMyPlayerId() const { return game->myIndex; }
 
-	inline Specialty getPlayerSpecialty(int player_id) const { return game->players[player_id].specialty.value(); }
+	inline std::optional<Specialty> getPlayerSpecialty(int player_id) const { return game->players[player_id].specialty; }
 
-	inline Specialty getMySpecialty() const { return getPlayerSpecialty(getMyPlayerId()); }
+	inline std::optional<Specialty> getMySpecialty() const { return getPlayerSpecialty(getMyPlayerId()); }
 
 	// Возвращает индекс игрока в нашей команде с данной специализацией
 	// Если такого не находит, то возвращает -1

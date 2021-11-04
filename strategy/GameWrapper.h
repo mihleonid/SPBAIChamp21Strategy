@@ -78,11 +78,12 @@ public:
 	inline int getPlayerAvailableFlyingGroups(int player_id) const { return available_flying_groups.at(player_id); };
 	inline void addPlayerFlyingGroup(int player_id) { available_flying_groups[player_id] -= 1; };
 
-	int getPlanetFreeWorkerPlace(int planet_id) const;
-
+	inline int getPlanetFreeWorkerPlace(int planet_id) const {return free_worker_place.at(planet_id);};
+	inline void reservePlanetFreeWorkerPlace(int planet_id, int cnt) {free_worker_place[planet_id] -= cnt;}
 private:
 	Game &game;
 	std::vector<std::unordered_map<int, int>> free_robots;         //index is a planet's id
 	std::vector<std::unordered_map<Resource, int>> free_resources;
 	std::unordered_map<int, int> available_flying_groups;
+	std::unordered_map<int, int> free_worker_place; // planet_id -> number of free worker place
 };

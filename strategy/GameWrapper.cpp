@@ -28,6 +28,19 @@ void GameWrapper::update(const Game &g) {
 						  [player_id](const FlyingWorkerGroup &group) { return group.playerIndex == player_id; });
 		available_flying_groups[player_id] = game.maxFlyingWorkerGroups - current_flying_groups;
 	}
+
+	for (int planet_id = 0; planet_id < game.planets.size(); ++planet_id) {
+		if (game.planets[planet_id].building.has_value()) {
+			Building building = game.planets[planet_id].building.value();
+			if (building.health == game.buildingProperties[building.buildingType].maxHealth) {
+				free_worker_place[planet_id] = game.buildingProperties[building.buildingType].maxWorkers;
+			} else {
+				free_worker_place[planet_id] = 0;
+			}
+		} else {
+			free_worker_place[planet_id] = 0;
+		}
+	}
 }
 
 int GameWrapper::getRobotCount(int planet_id, int player_id) const {
@@ -189,13 +202,4 @@ int GameWrapper::getOurBattlePower(int planet_id) const {
 int GameWrapper::getEnemyBattlePower(int planet_id) const {
 	return getEnemyTeamRobotCount(planet_id) +
 		(getEnemyRobotCount(planet_id, Specialty::COMBAT) * game.combatUpgrade) / 100;
-}
-
-int GameWrapper::getPlanetFreeWorkerPlace(int planet_id) const {
-	std::optional<Building> building = getBuilding(planet_id);
-	if (building.has_value()) {
-		BuildingProperties info = getBuildingProperties(building.value().buildingType);
-		return info.maxWorkers - getMyTeamRobotCount(planet_id);
-	}
-	return 0;
 }

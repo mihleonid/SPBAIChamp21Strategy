@@ -1,65 +1,86 @@
-#include "common.h"
-#include "tasks.h"
+#include <vector>
+#include <unordered_map>
 
-class GameWrapper{
-	private:
-		const Game* game;
-		bool inited;
-		void init();
-		vi availFly;
-		int ourScore, theirScore;
-		dict<Specialty, int> whoCan;
-		dict<Specialty, int> whoCanEvil;
-		BotSet ourFlyingBots;
-		BotSet theirFlyingBots;
-		vector<BotSet> ourBots; // Bots on planets, battle and done actions excluded.
-		vector<BotSet> theirBots;
-		vector<ResSet> resources; // Resources on planets, used excluded
-		vector<vector<MoveTask>> waitingMoves; //TODO discuss may be better not to have queue of moves, but dict[target -> task];
-		vector<MoveAction> nowMoves;
+#include "model/Game.hpp"
+#include "model/Specialty.hpp"
 
-		vector<pair<int, ResSet>> targetting; // Who is comming to us
-		set<int> was_in_battle; // Indexes of planets
+using namespace model;
 
-		int get_team(int);// Returns team by player index
-		int get_our_team();
-		int get_my_index();
-		int& get_avail_fly(int idx);
-		int& get_avail_fly(Specialty); // Return max availible flying worker group cnt
-		bool is_player_good(int idx); // Our team's player
-		bool is_player_evil(int idx); // Their team's player
-		int who_can(Specialty); // Returns who from our team has such specialty
-		int who_can_evil(Specialty); // Returns who from their team has such specialty
-		Specialty get_specialty(int idx); // Returns specialty of playert with index == idx;
+class GameWrapper {
+public:
+	GameWrapper();
+	void update(const Game &);
 
-		void add_move(int from, int to, int who, int when);
-		void add_move(int from, int to, int who, Resource, int when);
-		void add_move(int from, MoveTask);
+	int getRobotCount(int planet_id, int player_id) const;
+	inline int getFreeRobotCount(int planet_id, int player_id) const { return free_robots[planet_id].at(player_id); }
 
-		void update_flyers();
-		void update_battles();
-		void update_moves();
+	inline int getMyRobotCount(int planet_id, Specialty specialty) const { return getRobotCount(planet_id, getMyPlayerIdBySpecialty(specialty));}
+	inline int getMyFreeRobotCount(int planet_id, Specialty specialty) const { return getFreeRobotCount(planet_id, getMyPlayerIdBySpecialty(specialty)); }
 
-	public:
-		GameWrapper();
-		void update(const Game&);
-		vector<MoveAction> get_moves();
-		vector<BuildingAction> get_builds();
+	inline int getEnemyRobotCount(int planet_id, Specialty specialty) const { return getRobotCount(planet_id, getEnemyPlayerIdBySpecialty(specialty)); }
+	inline int getEnemyFreeRobotCount(int planet_id, Specialty specialty) const { return getFreeRobotCount(planet_id, getEnemyPlayerIdBySpecialty(specialty))}
 
-		int get_tick();
-		Specialty get_my_specialty();
-		int get_our_score();
-		int get_their_score();
+	int getMyTeamRobotCount(int planet_id) const;
+	int getMyTeamFreeRobotCount(int planet_id) const;
 
-		int reserve_bot(int planet, int cnt, Specialty); // Reserves bots and returnes rest that was not reserved
-		void reserve_res(int planet, int cnt,  Resource); // Reserves resources or crash
-		int get_all_our_bots(int planet); // Return sum of ourBots on planet
-		int get_all_their_bots(int planet);
+	int getEnemyTeamRobotCount(int planet_id) const;
+	int getEnemyTeamFreeRobotCount(int planet_id) const;
 
-		void add_move(int from, int to, int who);
-		void add_move(int from, int to, int who, Resource);
+	int getMyTotalRobotCount() const;
+	int getMyTotalFreeRobotCount() const;
 
-		int our_might(int planet); // Return our battle power.
-		int their_might(int planet); // Return their battle power.
-		pair<BotSet, BotSet> battle(BotSet a, BotSet b); // Кто выживет.
+	int getEnemyTotalRobotCount() const;
+	int getEnemyTotalFreeRobotCount() const;
+
+	int getMyTeamScore() const;
+	int getEnemyTeamScore() const;
+
+	bool isPlayerFriend(int player_id) const; // Our team's player
+	bool isPlayerEnemy(int player_id) const;  // Their team's player
+
+	std::unordered_map<Resource, int> getResourcesCount(int planet_id) const;
+	inline int getResourceCount(int planet_id, Resource resource) const { return getResourcesCount(planet_id)[resource]; }
+
+	inline int getMyTeamId() const { return getPlayerTeamId(getMyPlayerId()); }
+	int getEnemyTeamId() const;
+
+	// Если не хватает, то не резервирует, а возвращает, сколько там есть
+	// Иначе возвращает сколько зарезервировало
+	inline int reserveMyRobots(int planet_id, Specialty sp, int cnt) { return reserveRobots(planet_id, getMyPlayerIdBySpecialty(sp), cnt); }
+	inline int reserveEnemyRobots(int planet_id, Specialty sp, int cnt) { return reserveRobots(planet_id, getEnemyPlayerIdBySpecialty(sp), cnt); }
+	int reserveRobots(int planet_id, int player_id, int cnt);
+	int reserveResources(int planetId, Resource resource, int cnt);
+
+	inline std::optional<Building> getBuilding(int planet_id) const { return game.planets[planet_id].building; }
+	inline BuildingProperties getBuildingProperties(BuildingType t) const { return game.buildingProperties[t]; }
+
+	bool isEnoughResourcesToBuild(int planet_id, BuildingType) const;
+
+	inline int getCurrentTick() const { return game.currentTick; }
+
+	inline int getPlayerTeamId(int player_id) const { return game.players[player_id].teamIndex; }
+	inline int getMyPlayerId() const { return game.myIndex; }
+
+	inline Specialty getPlayerSpecialty(int player_id) const { return game.players[player_id].specialty.value(); }
+
+	inline Specialty getMySpecialty() const { return getPlayerSpecialty(getMyPlayerId()); }
+
+	// Возвращает индекс игрока в нашей команде с данной специализацией
+	// Если такого не находит, то возвращает -1
+	int getMyPlayerIdBySpecialty(Specialty) const;
+	// Возвращает индекс игрока во вражеской команде с данной специализацией
+	// Если такого не находит, то возвращает -1
+	int getEnemyPlayerIdBySpecialty(Specialty) const;
+
+	int getOurBattlePower(int planet) const; // Return our battle power.
+	int getEnemyBattlePower(int planet) const; // Return their battle power.
+
+	inline int getPlayerAvailableFlyingGroups(int player_id) const;
+
+	int getPlanetFreeWorkerPlace(int planet_id) const;
+
+private:
+	Game &game;
+	std::vector<std::unordered_map<int, int>> free_robots;         //index is a planet's id
+	std::vector<std::unordered_map<Resource, int>> free_resources;
 };

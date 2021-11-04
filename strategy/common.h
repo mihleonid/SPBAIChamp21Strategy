@@ -1,5 +1,5 @@
 #pragma once
-#include "bits/stdc++.h"
+// #include "bits/stdc++.h"
 #include "MyStrategy.hpp"
 #include "model/Specialty.hpp"
 using namespace model;
@@ -22,9 +22,9 @@ using namespace std;
 #define warning_if(X) if(X){cout<<__FILE__<<':'<<__LINE__<<" "<<(#X)<<" warning!"<<endl;}
 #define warning_if_msg(X, Y) if(X){cout<<__FILE__<<':'<<__LINE__<<" "<<(Y)<<endl;}
 #endif
-using Specialty::LOGISTICS;
-using Specialty::PRODUCTION;
-using Specialty::COMBAT;
+// using Specialty::LOGISTICS;
+// using Specialty::PRODUCTION;
+// using Specialty::COMBAT;
 template<typename T> bool rmax(T& a, T b); // a=max(a, b); return 1, if there was replace, and 0 if not
 template<typename T> bool rmin(T& a, T b); // Analog
 template<typename T> T mabs(T a); // Math absolute funcition

@@ -20,6 +20,14 @@ void GameWrapper::update(const Game &g) {
 			free_resources[planet_id][resource] += amount;
 		}
 	}
+
+	for (int player_id = 0; player_id < game.players.size(); ++player_id) {
+		int current_flying_groups =
+			std::count_if(game.flyingWorkerGroups.begin(),
+						  game.flyingWorkerGroups.end(),
+						  [player_id](const FlyingWorkerGroup &group) { return group.playerIndex == player_id; });
+		available_flying_groups[player_id] = game.maxFlyingWorkerGroups - current_flying_groups;
+	}
 }
 
 int GameWrapper::getRobotCount(int planet_id, int player_id) const {
@@ -183,14 +191,6 @@ int GameWrapper::getEnemyBattlePower(int planet_id) const {
 		(getEnemyRobotCount(planet_id, Specialty::COMBAT) * game.combatUpgrade) / 100;
 }
 
-int GameWrapper::getPlayerAvailableFlyingGroups(int player_id) const {
-	int currFlyingGroups =
-		std::count_if(game.flyingWorkerGroups.begin(),
-					  game.flyingWorkerGroups.end(),
-					  [player_id](const FlyingWorkerGroup &group) { return group.playerIndex == player_id; });
-	return game.maxFlyingWorkerGroups - currFlyingGroups;
-}
-
 int GameWrapper::getPlanetFreeWorkerPlace(int planet_id) const {
 	std::optional<Building> building = getBuilding(planet_id);
 	if (building.has_value()) {
@@ -199,11 +199,3 @@ int GameWrapper::getPlanetFreeWorkerPlace(int planet_id) const {
 	}
 	return 0;
 }
-
-
-
-
-/*pair<BotSet, BotSet> GameWrapper::battle(BotSet we, BotSet they){
-	//Если что, то нас могут поколотить - лучше перебдеть и распределить всем нашим округление урона вверх.
-	return {we, they}; // TODO Real battle so on one of BotSets will be 0,0,0
-}*/

@@ -18,7 +18,7 @@ public:
 	inline int getMyFreeRobotCount(int planet_id, Specialty specialty) const { return getFreeRobotCount(planet_id, getMyPlayerIdBySpecialty(specialty)); }
 
 	inline int getEnemyRobotCount(int planet_id, Specialty specialty) const { return getRobotCount(planet_id, getEnemyPlayerIdBySpecialty(specialty)); }
-	inline int getEnemyFreeRobotCount(int planet_id, Specialty specialty) const { return getFreeRobotCount(planet_id, getEnemyPlayerIdBySpecialty(specialty))}
+	inline int getEnemyFreeRobotCount(int planet_id, Specialty specialty) const { return getFreeRobotCount(planet_id, getEnemyPlayerIdBySpecialty(specialty));}
 
 	int getMyTeamRobotCount(int planet_id) const;
 	int getMyTeamFreeRobotCount(int planet_id) const;
@@ -75,7 +75,8 @@ public:
 	int getOurBattlePower(int planet) const; // Return our battle power.
 	int getEnemyBattlePower(int planet) const; // Return their battle power.
 
-	inline int getPlayerAvailableFlyingGroups(int player_id) const;
+	inline int getPlayerAvailableFlyingGroups(int player_id) const { return available_flying_groups.at(player_id); };
+	inline void addPlayerFlyingGroup(int player_id) { available_flying_groups[player_id] -= 1; };
 
 	int getPlanetFreeWorkerPlace(int planet_id) const;
 
@@ -83,4 +84,5 @@ private:
 	Game &game;
 	std::vector<std::unordered_map<int, int>> free_robots;         //index is a planet's id
 	std::vector<std::unordered_map<Resource, int>> free_resources;
+	std::unordered_map<int, int> available_flying_groups;
 };

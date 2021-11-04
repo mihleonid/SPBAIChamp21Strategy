@@ -2,7 +2,7 @@
 // #include "common.h"
 #include "model/Specialty.hpp"
 #include "model/Action.hpp"
-#include "GameWrapper.h"
+#include "strategy/GameWrapper.h"
 class Task {
 public:
 	virtual model::Specialty getActorSpecialty() const = 0;

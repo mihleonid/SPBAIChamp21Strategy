@@ -1,12 +1,25 @@
 #include "MyStrategy.hpp"
-#include <exception>
-#include "strategy/GameWrapper.h"
+#include "strategy/graph.h"
 
-GameWrapper gw;
-MyStrategy::MyStrategy() {}
+model::Action MyStrategy::getAction(const model::Game& game) {
+	if (Graph::getInstance() == nullptr)
+		Graph::init(game);
+	if (game.currentTick >= game.maxTickCount)
+		Graph::cleanup();
 
-model::Action MyStrategy::getAction(const model::Game& game)
-{
-	gw.update(game);
-	return model::Action(gw.get_moves(), std::vector<model::BuildingAction>(), std::optional<model::Specialty>());
+	game_wrapper.update(game);
+
+	// if (game.currentTick <= 3) // FIXME
+	// 	return Action(); // TODO: return my specialty
+
+	core.process(game_wrapper);
+
+	Action result;
+
+	for (Task* task : core.getAllTasks()) {
+		if (task->getActorSpecialty() == game_wrapper.getMySpecialty()) {
+			result += task->toAction();
+		}
+	}
+	return result;
 }

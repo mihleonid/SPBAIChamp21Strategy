@@ -25,6 +25,7 @@ public:
     // Choosing specialty
     std::optional<model::Specialty> chooseSpecialty;
 
+	Action();
     Action(std::vector<model::MoveAction> moves, std::vector<model::BuildingAction> buildings, std::optional<model::Specialty> chooseSpecialty);
 
     // Read Action from input stream
@@ -35,6 +36,8 @@ public:
 
     // Get string representation of Action
     std::string toString() const;
+
+	Action& operator+=(const Action& other);
 };
 
 }

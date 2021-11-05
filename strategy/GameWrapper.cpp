@@ -5,6 +5,14 @@
 void GameWrapper::update(const Game &g) {
 	game = &g;
 
+	if (player_starting_planet.empty()) {
+		for (int planet_id = 0; planet_id < game->planets.size(); ++planet_id) {
+			if (game->planets[planet_id].building.has_value()) {
+				player_starting_planet[game->planets[planet_id].workerGroups[0].playerIndex] = planet_id;
+			}
+		}
+	}
+
 	free_robots.resize(game->planets.size());
 	free_resources.resize(game->planets.size());
 
@@ -138,7 +146,13 @@ bool GameWrapper::isPlayerFriend(int player_id) const {
 }
 
 std::unordered_map<Resource, int> GameWrapper::getResourcesCount(int planet_id) const {
-	return game->planets[planet_id].resources;
+	return free_resources[planet_id];
+}
+
+int GameWrapper::getResourceCount(int planet_id, Resource resource) const {
+	if (free_resources[planet_id].find(resource) != free_resources[planet_id].end())
+		return free_resources[planet_id].at(resource);
+	return 0;
 }
 
 int GameWrapper::getEnemyTeamId() const {

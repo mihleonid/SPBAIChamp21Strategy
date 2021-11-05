@@ -5,11 +5,9 @@
 class Graph {
 public:
 	int lineDist(int from, int to) const;       // Length of straight line (x+y)
-	int anyDist(int from, int to) const;        // Length of path for any specialization
-	int anyNext(int from, int to) const;        // Number of next planet for any specialization
-	int fastDist(int from, int to) const;       // Length of path for logistics specialization
-	int fastNext(int from, int to) const;       // Number of next planet for logistics specialization
-	// void init_graph(const model::Game&); // Call it just once in the beginning of game
+
+	int distBySpecialty(int from, int to, model::Specialty);
+	int nextBySpecialty(int from, int to, model::Specialty);
 
 	inline static Graph* getInstance() { return instance; }
 	inline static void init(const model::Game& game) { instance = new Graph(game); }
@@ -24,6 +22,6 @@ private:
 	std::vector<std::vector<int>> next_logistic_specialty;
 	std::vector<std::vector<int>> dists_line;
 
-	void dijkstra(int from, const std::vector<std::vector<int>> &graph, std::vector<std::vector<int>> &d, std::vector<std::vector<int>> &nexts);
+	void dijkstra(int from, const std::vector<std::vector<int>> &graph, std::vector<int> &dist, std::vector<std::vector<int>> &nexts);
 	std::vector<std::vector<int>> build_graph(int max_dist);
 };

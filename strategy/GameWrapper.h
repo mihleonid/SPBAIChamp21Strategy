@@ -11,7 +11,7 @@ class GameWrapper {
 public:
 	void update(const Game &);
 
-	inline const std::vector<Planet>& getPlanets() const { return game->planets; }
+	inline int getPlanetsCount() const { return game->planets.size(); }
 
 	int getRobotCount(int planet_id, int player_id) const;
 	inline int getFreeRobotCount(int planet_id, int player_id) const { return free_robots[planet_id].at(player_id); }
@@ -41,7 +41,7 @@ public:
 	bool isPlayerEnemy(int player_id) const;  // Their team's player
 
 	std::unordered_map<Resource, int> getResourcesCount(int planet_id) const;
-	inline int getResourceCount(int planet_id, Resource resource) const { return getResourcesCount(planet_id)[resource]; }
+	int getResourceCount(int planet_id, Resource resource) const;
 
 	inline int getMyTeamId() const { return getPlayerTeamId(getMyPlayerId()); }
 	int getEnemyTeamId() const;
@@ -82,8 +82,11 @@ public:
 
 	inline int getPlanetFreeWorkerPlace(int planet_id) const {return free_worker_place.at(planet_id); }
 	inline void reservePlanetFreeWorkerPlace(int planet_id, int cnt) {free_worker_place[planet_id] -= cnt; }
+
+	inline int getPlayerStartingPlanet(int player_id) const { return player_starting_planet.at(player_id); }
 private:
 	const Game* game;
+	std::unordered_map<int, int> player_starting_planet;
 	std::vector<std::unordered_map<int, int>> free_robots;         //index is a planet's id
 	std::vector<std::unordered_map<Resource, int>> free_resources;
 	std::unordered_map<int, int> available_flying_groups;

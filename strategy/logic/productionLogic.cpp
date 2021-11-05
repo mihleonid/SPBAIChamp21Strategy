@@ -49,7 +49,7 @@ void Core::supplyingLogistics(int priority, GameWrapper &game_wrapper) {
 				int produced_resource = std::min(game_wrapper.getResourceCount(planet_id, info.produceResource.value()),
 												 game_wrapper.getMyTeamFreeRobotCount(planet_id));
 				// Ищем, какое кол-во ресурса мы можем оставить на планетах - потребителях
-				int l = 0, r = 10e9, goal_number;
+				int l = 0, r = 1e9, goal_number;
 				while (r - l > 1) {
 					goal_number = (l + r) / 2;
 					int total_send = 0;

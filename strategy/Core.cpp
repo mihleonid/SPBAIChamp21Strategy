@@ -20,8 +20,8 @@ void Core::process(GameWrapper& game_wrapper) {
 
 bool Core::addTask(Task *task, int priority, GameWrapper& game_wrapper) {
 	bool will_execute = task->reserve(game_wrapper);
-	if (will_execute) {
-		current_tasks[priority].insert(task);
-	}
+	// if (will_execute) {
+	current_tasks[priority].insert(task);
+	// }
 	return will_execute;
 }

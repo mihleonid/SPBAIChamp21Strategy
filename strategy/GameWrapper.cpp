@@ -61,33 +61,44 @@ int GameWrapper::getRobotCount(int planet_id, int player_id) const {
 	return robots;
 }
 
+int GameWrapper::getFreeRobotCount(int planet_id, int player_id) const {
+	if (free_robots[planet_id].find(player_id) != free_robots[planet_id].end())
+		return free_robots[planet_id].at(player_id);
+	return 0;
+}
+
 int GameWrapper::getMyTeamRobotCount(int planet_id) const {
 	int res = 0;
-	for (int i = 0; i < 3; ++i) {
-		res += getMyRobotCount(planet_id, (Specialty) i);
+	for (int i = 0; i < game->players.size(); ++i) {
+		if (isPlayerFriend(i))
+			res += getRobotCount(planet_id, i);
 	}
 	return res;
 }
 
 int GameWrapper::getMyTeamFreeRobotCount(int planet_id) const {
 	int res = 0;
-	for (int i = 0; i < 3; ++i) {
-		res += getMyFreeRobotCount(planet_id, (Specialty) i);
+	for (int i = 0; i < game->players.size(); ++i) {
+		if (isPlayerFriend(i))
+			res += getFreeRobotCount(planet_id, i);
 	}
 	return res;
 }
 
 int GameWrapper::getEnemyTeamRobotCount(int planet_id) const {
 	int res = 0;
-	for (int i = 0; i < 3; ++i)
-		res += getEnemyRobotCount(planet_id, (Specialty) i);
+	for (int i = 0; i < game->players.size(); ++i) {
+		if (isPlayerEnemy(i))
+			res += getRobotCount(planet_id, i);
+	}
 	return res;
 }
 
 int GameWrapper::getEnemyTeamFreeRobotCount(int planet_id) const {
 	int res = 0;
-	for (int i = 0; i < 3; ++i) {
-		res += getEnemyFreeRobotCount(planet_id, (Specialty) i);
+	for (int i = 0; i < game->players.size(); ++i) {
+		if (isPlayerEnemy(i))
+			res += getFreeRobotCount(planet_id, i);
 	}
 	return res;
 }
@@ -218,10 +229,8 @@ int GameWrapper::getEnemyBattlePower(int planet_id) const {
 		(getEnemyRobotCount(planet_id, Specialty::COMBAT) * game->combatUpgrade) / 100;
 }
 
-
-
-
-/*pair<BotSet, BotSet> GameWrapper::battle(BotSet we, BotSet they){
-	//Если что, то нас могут поколотить - лучше перебдеть и распределить всем нашим округление урона вверх.
-	return {we, they}; // TODO Real battle so on one of BotSets will be 0,0,0
-}*/
+int GameWrapper::getPlanetFreeWorkerPlace(int planet_id) const {
+	if (free_worker_place.find(planet_id) != free_worker_place.end())
+		return free_worker_place.at(planet_id);
+	return 0;
+}

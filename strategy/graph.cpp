@@ -18,18 +18,23 @@ void Graph::dijkstra(int from, const std::vector<std::vector<int>> &graph, std::
 		int u = open.begin()->second;
 		open.erase(open.begin());
 
-		for (int p: graph[u]) {  // find ancestor with minimum vertices on path [from..p]
+		/*for (int p: graph[u]) {  // find ancestor with minimum vertices on path [from..p]
 			if (dist[p] + lineDist(p, u) == dist[u] && vertices_on_path[p] + 1 < vertices_on_path[u]) {
 				nexts[u][from] = p;
 				vertices_on_path[u] = vertices_on_path[p] + 1;
 			}
-		}
+		}*/
 
 		for (int v: graph[u]) {
 			if (dist[u] + lineDist(u, v) < dist[v]) {
 				open.erase({dist[v], v});
 				dist[v] = dist[u] + lineDist(u, v);
 				open.insert({dist[v], v});
+			}
+
+			if (dist[u] + lineDist(v, u) == dist[v] && vertices_on_path[u] + 1 < vertices_on_path[v]) {
+				nexts[v][from] = u;
+				vertices_on_path[v] = vertices_on_path[u] + 1;
 			}
 		}
 	}

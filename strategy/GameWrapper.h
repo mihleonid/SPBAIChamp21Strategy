@@ -11,10 +11,10 @@ class GameWrapper {
 public:
 	void update(const Game &);
 
-	inline int getPlanetsCount() const { return game->planets.size(); }
+	inline const std::vector<Planet> & getPlanets() const { return game->planets; }
 
 	int getRobotCount(int planet_id, int player_id) const;
-	inline int getFreeRobotCount(int planet_id, int player_id) const { return free_robots[planet_id].at(player_id); }
+	int getFreeRobotCount(int planet_id, int player_id) const;
 
 	inline int getMyRobotCount(int planet_id, Specialty specialty) const { return getRobotCount(planet_id, getMyPlayerIdBySpecialty(specialty)); }
 	inline int getMyFreeRobotCount(int planet_id, Specialty specialty) const { return getFreeRobotCount(planet_id, getMyPlayerIdBySpecialty(specialty)); }
@@ -80,8 +80,8 @@ public:
 	inline int getPlayerAvailableFlyingGroups(int player_id) const { return available_flying_groups.at(player_id); }
 	inline void addPlayerFlyingGroup(int player_id) { available_flying_groups[player_id] -= 1; }
 
-	inline int getPlanetFreeWorkerPlace(int planet_id) const {return free_worker_place.at(planet_id); }
-	inline void reservePlanetFreeWorkerPlace(int planet_id, int cnt) {free_worker_place[planet_id] -= cnt; }
+	int getPlanetFreeWorkerPlace(int planet_id) const;
+	inline void reservePlanetFreeWorkerPlace(int planet_id, int cnt) { free_worker_place[planet_id] -= cnt; }
 
 	inline int getPlayerStartingPlanet(int player_id) const { return player_starting_planet.at(player_id); }
 private:

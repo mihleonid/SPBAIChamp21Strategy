@@ -7,7 +7,7 @@ MoveResourceTask::MoveResourceTask(int planet_from, int planet_to, Resource reso
 	planet_to(planet_to), resource(resource),
 	resource_cnt(resource_cnt), specialty(specialty), current_planet(planet_from) {
 	next_launch_timer = 0;
-	next_arrival_planet = -1;
+	next_arrival_planet = planet_from;
 }
 
 bool MoveResourceTask::reserve(GameWrapper &game_wrapper) {
@@ -22,6 +22,7 @@ bool MoveResourceTask::reserve(GameWrapper &game_wrapper) {
 		resource_cnt = std::min({robot_cnt, resources, resource_cnt});
 		game_wrapper.reserveResources(current_planet, resource, resource_cnt);
 		game_wrapper.reserveMyRobots(current_planet, specialty, resource_cnt);
+		game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
 
 		next_arrival_planet = Graph::getInstance()->nextBySpecialty(current_planet, planet_to, specialty);
 		next_launch_timer = Graph::getInstance()->distBySpecialty(current_planet, planet_to, specialty);
@@ -35,11 +36,12 @@ bool MoveResourceTask::reserve(GameWrapper &game_wrapper) {
 
 model::Action MoveResourceTask::toAction() const {
 	if (will_launch_this_tick)
-		return Action({MoveAction(current_planet, next_arrival_planet, resource_cnt, resource)}, std::vector<BuildingAction>(), std::nullopt);
+		return Action({MoveAction(current_planet, next_arrival_planet, resource_cnt, resource)},
+					  std::vector<BuildingAction>(), std::nullopt);
 	else
 		return Action();
 }
 
 bool MoveResourceTask::hasStopped(const GameWrapper &game_wrapper) const {
-	return (current_planet == planet_to && next_launch_timer == 0) || resource_cnt == 0;
+	return (current_planet == planet_to && next_launch_timer == 0) || resource_cnt <= 0;
 }

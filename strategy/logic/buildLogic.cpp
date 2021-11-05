@@ -16,7 +16,7 @@ const static std::map<BuildingType, std::vector<std::pair<BuildingType, int>>> B
 };
 
 void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
-	std::vector<bool> used(game_wrapper.getPlanetsCount());
+	std::vector<bool> used(game_wrapper.getPlanets().size());
 
 	for (int player_id = 0; player_id < 6; ++player_id) {
 		if (game_wrapper.isPlayerFriend(player_id)) {
@@ -30,13 +30,15 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 		std::vector<std::pair<int, int>> dependencies; // planet_id weight
 		for (const auto& [pf, weight] : dependence) {
 			for (int planet_id : building_locations[pf]) {
-				dependencies.push_back({planet_id, weight});
+				dependencies.emplace_back(planet_id, weight);
 			}
 		}
 
 		int best_variant = -1, best_dist = -1;
-		for (int planet_id = 0; planet_id < game_wrapper.getPlanetsCount(); ++planet_id) {
-			if (used[planet_id])
+		for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
+			const Planet& planet = game_wrapper.getPlanets()[planet_id];
+			if (used[planet_id] ||
+			(building_property.harvest && planet.harvestableResource != building_property.produceResource))
 				continue;
 			int dst = 0;
 			for (const auto& [dependence_planet_id, weight] : dependencies) {
@@ -70,9 +72,16 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 
 			if (game_wrapper.isEnoughResourcesToBuild(planet_id, building_type) ||
 				(building.has_value() && building->health < info.maxHealth)) {
-				int player_id = game_wrapper.getMyPlayerIdBySpecialty(Specialty::COMBAT);
-				if (!building.has_value() && player_id != -1)
-					addTask(new BuildTask(planet_id, BuildingType::QUARRY, 10, Specialty::COMBAT), priority, game_wrapper);
+				// Выбираем специализацию для постройки
+				for (Specialty specialty : {Specialty::COMBAT, Specialty::PRODUCTION, Specialty::LOGISTICS}) {
+					int player_id = game_wrapper.getMyPlayerIdBySpecialty(specialty);
+					if (!building.has_value() && player_id != -1) {
+						if (game_wrapper.getRobotCount(planet_id, player_id) > 0) {
+							addTask(new BuildTask(planet_id, building_type, 10, Specialty::COMBAT), priority, game_wrapper);
+							break;
+						}
+					}
+				}
 			}
 		}
 	}

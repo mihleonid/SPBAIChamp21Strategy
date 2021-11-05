@@ -18,8 +18,10 @@ model::Action MyStrategy::getAction(const model::Game& game) {
 
 	for (Task* task : core.getAllTasks()) {
 		if (task->getActorSpecialty() == game_wrapper.getMySpecialty()) {
+			// std::cout << "Doing my task!" << std::endl;
 			result += task->toAction();
 		}
 	}
+	result.chooseSpecialty = Specialty::LOGISTICS;
 	return result;
 }

@@ -26,8 +26,6 @@ public:
 	}
 
 private:
-	std::unordered_map<BuildingType, std::vector<int>> building_locations;
-
 	// приоритет -> список заданий с таким приоритетом
 	std::map<int, std::unordered_set<Task*>> current_tasks;
 
@@ -36,20 +34,32 @@ private:
 	// и они добавляют Task переданного приоритета
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
 		&Core::destroyLogic,
-		&Core::buildLogic
+		&Core::buildLogic,
+		&Core::supplyingLogistics,
+		&Core::workAssignment,
+		&Core::returnLogistics
 	};
 	/*
 	 *  Битва
 	 *	Разрушение
+	 *	Строительство
 	 *	Перемещение на атаку
 	 *	Перемещение на защиту (?)
 	 *	Перенос ресурсов на потребителя
 	 *	Производство
 	 */
 
+	std::unordered_map<BuildingType, std::vector<int>> building_locations;
+	std::unordered_map<Resource, std::unordered_set<int>> dependencies;
+
 	void selectPlanets(const GameWrapper& game_wrapper);
 
 	void destroyLogic(int priority, GameWrapper& game_wrapper);
 
 	void buildLogic(int priority, GameWrapper& game_wrapper);
+
+	void updateDependencies(const GameWrapper &game_wrapper);
+	void supplyingLogistics(int priority, GameWrapper& game_wrapper);
+	void workAssignment(int priority, GameWrapper& game_wrapper);
+	void returnLogistics(int priority, GameWrapper& game_wrapper);
 };

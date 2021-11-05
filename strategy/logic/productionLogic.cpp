@@ -99,7 +99,7 @@ void Core::workAssignment(int priority, GameWrapper &game_wrapper) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id: locations) {
 			// Работа
-			int can_produce = 10e9;
+			int can_produce = 1e9;
 			for (const auto&[neededResource, amount]: info.workResources) {
 				can_produce = std::min(can_produce, game_wrapper.getResourceCount(planet_id, neededResource) / amount);
 			}

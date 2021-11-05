@@ -8,6 +8,10 @@ model::Action MyStrategy::getAction(const model::Game& game) {
 		Graph::cleanup();
 
 	game_wrapper.update(game);
+
+	// if (game.currentTick <= 3) // FIXME
+	// 	return Action(); // TODO: return my specialty
+
 	core.process(game_wrapper);
 
 	Action result;

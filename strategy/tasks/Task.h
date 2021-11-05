@@ -12,6 +12,8 @@ public:
 	virtual bool reserve(GameWrapper&) = 0;
 	virtual model::Action toAction() const = 0;
 	virtual bool hasStopped(const GameWrapper&) const = 0;
+
+	virtual ~Task() = default;
 };
 /*struct MoveTask{
 	int start; // tick when from we can do this action. It is used to calculate targeting (who are flying to us) and prevent unwanted optimization (Про которую я ещё спрашивал, нужна ли она нам).

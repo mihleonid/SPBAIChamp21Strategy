@@ -55,7 +55,7 @@ set (SRC
 	"strategy/GameWrapper.cpp"
 	"strategy/common.cpp"
 	"strategy/graph.cpp"
-    "strategy/Core.cpp" strategy/tasks/DestroyTask.cpp strategy/tasks/DestroyTask.h)
+    "strategy/Core.cpp" strategy/tasks/DestroyTask.cpp strategy/tasks/DestroyTask.h strategy/tasks/BuildTask.cpp strategy/tasks/BuildTask.h)
 set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
 #set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")
 SET_SOURCE_FILES_PROPERTIES(${HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)

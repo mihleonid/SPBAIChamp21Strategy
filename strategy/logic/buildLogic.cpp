@@ -15,6 +15,18 @@ const static std::map<BuildingType, std::vector<std::pair<BuildingType, int>>> B
 	{BuildingType::REPLICATOR, {{BuildingType::FOUNDRY, 2}, {BuildingType::ACCUMULATOR_FACTORY, 1}, {BuildingType::CHIP_FACTORY, 2}}}
 };
 
+const static std::map<BuildingType, int> BUILDING_COUNT = {
+	{BuildingType::REPLICATOR, 1},
+	{BuildingType::CHIP_FACTORY, 1},
+	{BuildingType::FURNACE, 1},
+	{BuildingType::CAREER, 1},
+	{BuildingType::FOUNDRY, 2},
+	{BuildingType::MINES, 2},
+	{BuildingType::ACCUMULATOR_FACTORY, 1},
+	{BuildingType::BIOREACTOR, 1},
+	{BuildingType::FARM, 1}
+};
+
 void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 	std::vector<bool> used(game_wrapper.getPlanets().size());
 
@@ -26,36 +38,38 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 	}
 
 	for (const auto& [building_type, dependence] : BUILDING_DEPENDENCIES) {
-		BuildingProperties building_property = game_wrapper.getBuildingProperties(building_type);
-		std::vector<std::pair<int, int>> dependencies; // planet_id weight
-		for (const auto& [pf, weight] : dependence) {
-			for (int planet_id : building_locations[pf]) {
-				dependencies.emplace_back(planet_id, weight);
+		for (int cnt = 0; cnt < BUILDING_COUNT[building_type]; ++cnt) {
+			BuildingProperties building_property = game_wrapper.getBuildingProperties(building_type);
+			std::vector<std::pair<int, int>> dependencies; // planet_id weight
+			for (const auto& [pf, weight] : dependence) {
+				for (int planet_id : building_locations[pf]) {
+					dependencies.emplace_back(planet_id, weight);
+				}
 			}
+
+			int best_variant = -1, best_dist = -1;
+			for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
+				const Planet& planet = game_wrapper.getPlanets()[planet_id];
+				if (used[planet_id] ||
+				(building_property.harvest && planet.harvestableResource != building_property.produceResource))
+					continue;
+				int dst = 0;
+				for (const auto& [dependence_planet_id, weight] : dependencies) {
+					dst +=
+						(Graph::getInstance()->distBySpecialty(planet_id, dependence_planet_id, Specialty::COMBAT) +
+							Graph::getInstance()->distBySpecialty(planet_id, dependence_planet_id, Specialty::LOGISTICS) +
+							Graph::getInstance()->distBySpecialty(planet_id, dependence_planet_id, Specialty::PRODUCTION)) * weight;
+				}
+
+				if (best_variant == -1 || dst < best_dist) {
+					best_dist = dst;
+					best_variant = planet_id;
+				}
+			}
+
+			used[best_variant] = true;
+			building_locations[building_type].push_back(best_variant);
 		}
-
-		int best_variant = -1, best_dist = -1;
-		for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
-			const Planet& planet = game_wrapper.getPlanets()[planet_id];
-			if (used[planet_id] ||
-			(building_property.harvest && planet.harvestableResource != building_property.produceResource))
-				continue;
-			int dst = 0;
-			for (const auto& [dependence_planet_id, weight] : dependencies) {
-				dst +=
-					(Graph::getInstance()->distBySpecialty(planet_id, dependence_planet_id, Specialty::COMBAT) +
-						Graph::getInstance()->distBySpecialty(planet_id, dependence_planet_id, Specialty::LOGISTICS) +
-						Graph::getInstance()->distBySpecialty(planet_id, dependence_planet_id, Specialty::PRODUCTION)) * weight;
-			}
-
-			if (best_variant == -1 || dst < best_dist) {
-				best_dist = dst;
-				best_variant = planet_id;
-			}
-		}
-
-		used[best_variant] = true;
-		building_locations[building_type].push_back(best_variant);
 	}
 }
 

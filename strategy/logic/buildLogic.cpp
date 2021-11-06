@@ -38,7 +38,7 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 	}
 
 	for (const auto& [building_type, dependence] : BUILDING_DEPENDENCIES) {
-		for (int cnt = 0; cnt < BUILDING_COUNT[building_type]; ++cnt) {
+		for (int cnt = 0; cnt < BUILDING_COUNT.at(building_type); ++cnt) {
 			BuildingProperties building_property = game_wrapper.getBuildingProperties(building_type);
 			std::vector<std::pair<int, int>> dependencies; // planet_id weight
 			for (const auto& [pf, weight] : dependence) {
@@ -81,8 +81,22 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id : locations) {
 			auto building = game_wrapper.getBuilding(planet_id);
-			if (building.has_value() && building.value().health == info.maxHealth)
+
+			if (building.has_value() && building.value().buildingType != building_type) {
+				for (Specialty specialty : {Specialty::COMBAT, Specialty::PRODUCTION, Specialty::LOGISTICS}) {
+					int player_id = game_wrapper.getMyPlayerIdBySpecialty(specialty);
+					if (player_id != -1) {
+						if (game_wrapper.getRobotCount(planet_id, player_id) > 0) {
+							addTask(new DestroyTask(planet_id, game_wrapper.getRobotCount(planet_id, player_id), specialty), priority, game_wrapper);
+							break;
+						}
+					}
+				}
+			}
+
+			if (building.has_value() && building.value().health == info.maxHealth) {
 				continue;
+			}
 
 			if (game_wrapper.isEnoughResourcesToBuild(planet_id, building_type) ||
 				(building.has_value() && building->health < info.maxHealth)) {
@@ -91,7 +105,9 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 					int player_id = game_wrapper.getMyPlayerIdBySpecialty(specialty);
 					if (!building.has_value() && player_id != -1) {
 						if (game_wrapper.getRobotCount(planet_id, player_id) > 0) {
-							addTask(new BuildTask(planet_id, building_type, 10, Specialty::COMBAT), priority, game_wrapper);
+							addTask(new BuildTask(planet_id, building_type,
+												  game_wrapper.getRobotCount(planet_id, player_id),
+												  specialty), priority, game_wrapper);
 							break;
 						}
 					}

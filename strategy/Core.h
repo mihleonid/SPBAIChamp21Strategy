@@ -33,11 +33,10 @@ private:
 	// Функции ((int) -> void) выполняются в порядке, заданном в этом массиве,
 	// и они добавляют Task переданного приоритета
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
-		&Core::destroyLogic,
+		// &Core::destroyLogic,
 		&Core::buildLogic,
-		&Core::supplyingLogistics,
-		&Core::workAssignment,
-		&Core::returnLogistics
+		&Core::productionLogic,
+		&Core::abandonLogic
 	};
 	/*
 	 *  Битва
@@ -59,7 +58,15 @@ private:
 	void buildLogic(int priority, GameWrapper& game_wrapper);
 
 	void updateDependencies(const GameWrapper &game_wrapper);
+
+	inline void productionLogic(int priority, GameWrapper& game_wrapper) {
+		supplyingLogistics(priority, game_wrapper);
+		workAssignment(priority, game_wrapper);
+		returnLogistics(priority, game_wrapper);
+	}
+
 	void supplyingLogistics(int priority, GameWrapper& game_wrapper);
 	void workAssignment(int priority, GameWrapper& game_wrapper);
 	void returnLogistics(int priority, GameWrapper& game_wrapper);
+	void abandonLogic(int priority, GameWrapper &game_wrapper);
 };

@@ -98,6 +98,7 @@ void Core::workAssignment(int priority, GameWrapper &game_wrapper) {
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id: locations) {
+			if (info.produceResource.has_value() && dependencies[info.produceResource.value()].empty()) break;
 			// Работа
 			int can_produce = 1e9;
 			for (const auto&[neededResource, amount]: info.workResources) {
@@ -156,6 +157,27 @@ void Core::returnLogistics(int priority, GameWrapper &game_wrapper) {
 									specialty),
 								priority, game_wrapper);
 						to_send -= packet;
+					}
+				}
+			}
+		}
+	}
+}
+
+void Core::abandonLogic(int priority, GameWrapper& game_wrapper) {
+	for (const auto&[building_type, locations] : building_locations) {
+		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
+		for (int planet_id: locations) {
+			if (info.produceResource.has_value() && dependencies[info.produceResource.value()].empty()) {
+				std::vector<int> replicators = building_locations[BuildingType::REPLICATOR];
+				if (!replicators.empty()) {
+					int random_replicator = replicators[(int) rand() % replicators.size()];
+					for (Specialty sp: {Specialty::LOGISTICS, Specialty::COMBAT, Specialty::PRODUCTION}) {
+						addTask(new MoveRobotsTask(
+							planet_id, random_replicator,
+							game_wrapper.getMyFreeRobotCount(planet_id, sp),
+							sp
+						), priority, game_wrapper);
 					}
 				}
 			}

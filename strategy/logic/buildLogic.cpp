@@ -38,7 +38,7 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 	}
 
 	for (const auto& [building_type, dependence] : BUILDING_DEPENDENCIES) {
-		for (int cnt = 0; cnt < BUILDING_COUNT[building_type]; ++cnt) {
+		for (int cnt = 0; cnt < BUILDING_COUNT.at(building_type); ++cnt) {
 			BuildingProperties building_property = game_wrapper.getBuildingProperties(building_type);
 			std::vector<std::pair<int, int>> dependencies; // planet_id weight
 			for (const auto& [pf, weight] : dependence) {

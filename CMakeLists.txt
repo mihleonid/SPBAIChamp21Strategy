@@ -53,21 +53,19 @@ set (SRC
 	"model/WorkerGroup.cpp"
 
 	"strategy/GameWrapper.cpp"
-	"strategy/common.cpp"
 	"strategy/graph.cpp"
     "strategy/Core.cpp"
 	"strategy/tasks/DestroyTask.cpp"
-	"strategy/tasks/DestroyTask.h"
 	"strategy/tasks/BuildTask.cpp"
-	"strategy/tasks/BuildTask.h"
 	"strategy/tasks/MoveResourceTask.cpp"
-	"strategy/tasks/MoveResourceTask.h"
 	"strategy/logic/buildLogic.cpp"
 	"strategy/logic/destroyLogic.cpp"
-	"strategy/logic/productionLogic.cpp" strategy/tasks/WorkTask.cpp strategy/tasks/WorkTask.h strategy/tasks/MoveRobotsTask.cpp strategy/tasks/MoveRobotsTask.h)
+	"strategy/logic/productionLogic.cpp"
+	"strategy/tasks/WorkTask.cpp"
+	"strategy/tasks/MoveRobotsTask.cpp")
 
-set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
-#set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")
+# set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
+# set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")
 SET_SOURCE_FILES_PROPERTIES(${HEADERS} PROPERTIES HEADER_FILE_ONLY TRUE)
 include_directories(".")
 add_executable(spb_ai_champ ${HEADERS} ${SRC})

@@ -13,7 +13,7 @@ public:
         tcpStream.write(token);
         tcpStream.write(int(1));
         tcpStream.write(int(0));
-        tcpStream.write(int(2));
+        tcpStream.write(int(0));
         tcpStream.flush();
     }
     void run()

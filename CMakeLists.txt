@@ -28,7 +28,20 @@ set(HEADERS
 	"model/Player.hpp"
 	"model/Resource.hpp"
 	"model/Specialty.hpp"
-	"model/WorkerGroup.hpp")
+	"model/WorkerGroup.hpp"
+
+	"strategy/tasks/BuildTask.h"
+	"strategy/tasks/DestroyTask.h"
+	"strategy/tasks/MoveResourceTask.h"
+	"strategy/tasks/MoveRobotsTask.h"
+	"strategy/tasks/Task.h"
+	"strategy/tasks/WorkTask.h"
+	"strategy/Core.h"
+	"strategy/GameWrapper.h"
+	"strategy/graph.h")
+
+
+
 set (SRC
 	"MyStrategy.cpp"
 	"Stream.cpp"
@@ -54,7 +67,7 @@ set (SRC
 
 	"strategy/GameWrapper.cpp"
 	"strategy/graph.cpp"
-    "strategy/Core.cpp"
+	"strategy/Core.cpp"
 	"strategy/tasks/DestroyTask.cpp"
 	"strategy/tasks/BuildTask.cpp"
 	"strategy/tasks/MoveResourceTask.cpp"

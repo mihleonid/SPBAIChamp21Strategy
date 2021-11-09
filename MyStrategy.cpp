@@ -1,5 +1,5 @@
 #include "MyStrategy.hpp"
-#include "strategy/graph.h"
+
 
 model::Action MyStrategy::getAction(const model::Game& game) {
 	if (Graph::getInstance() == nullptr)

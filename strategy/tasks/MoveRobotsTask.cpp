@@ -17,13 +17,14 @@ bool MoveRobotsTask::reserve(GameWrapper &game_wrapper) {
 			return false;
 		}
 		robot_cnt = std::min(game_wrapper.getMyFreeRobotCount(current_planet, specialty), robot_cnt);
+			game_wrapper.reserveMyRobots(current_planet, specialty, robot_cnt);
+		if (game_wrapper.getPlayerAvailableFlyingGroups(game_wrapper.getMyPlayerIdBySpecialty(specialty)) > 0) {
+			game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
 
-		game_wrapper.reserveMyRobots(current_planet, specialty, robot_cnt);
-		game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
-
-		next_arrival_planet = Graph::getInstance()->nextBySpecialty(current_planet, planet_to, specialty);
-		next_launch_timer = Graph::getInstance()->distBySpecialty(current_planet, planet_to, specialty);
-		will_launch_this_tick = true;
+			next_arrival_planet = Graph::getInstance()->nextBySpecialty(current_planet, planet_to, specialty);
+			next_launch_timer = Graph::getInstance()->distBySpecialty(current_planet, planet_to, specialty);
+			will_launch_this_tick = true;
+		}
 	} else {
 		next_launch_timer--;
 		will_launch_this_tick = false;

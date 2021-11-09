@@ -22,11 +22,13 @@ bool MoveResourceTask::reserve(GameWrapper &game_wrapper) {
 		resource_cnt = std::min({robot_cnt, resources, resource_cnt});
 		game_wrapper.reserveResources(current_planet, resource, resource_cnt);
 		game_wrapper.reserveMyRobots(current_planet, specialty, resource_cnt);
-		game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
+		if (game_wrapper.getPlayerAvailableFlyingGroups(game_wrapper.getMyPlayerIdBySpecialty(specialty)) > 0) {
+			game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
 
-		next_arrival_planet = Graph::getInstance()->nextBySpecialty(current_planet, planet_to, specialty);
-		next_launch_timer = Graph::getInstance()->distBySpecialty(current_planet, planet_to, specialty) - 1;
-		will_launch_this_tick = true;
+			next_arrival_planet = Graph::getInstance()->nextBySpecialty(current_planet, planet_to, specialty);
+			next_launch_timer = Graph::getInstance()->distBySpecialty(current_planet, planet_to, specialty) - 1;
+			will_launch_this_tick = true;
+		}
 	} else {
 		next_launch_timer--;
 		will_launch_this_tick = false;

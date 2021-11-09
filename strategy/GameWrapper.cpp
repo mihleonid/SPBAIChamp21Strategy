@@ -1,16 +1,25 @@
 #include "GameWrapper.h"
 
 #include <algorithm>
+#include <unordered_set>
 
 void GameWrapper::update(const Game &g) {
 	game = &g;
 
 	if (player_starting_planet.empty()) {
+		// init
 		for (int planet_id = 0; planet_id < game->planets.size(); ++planet_id) {
 			if (game->planets[planet_id].building.has_value()) {
 				player_starting_planet[game->planets[planet_id].workerGroups[0].playerIndex] = planet_id;
 			}
 		}
+
+		/*int i = 0;
+		for (int player_id = 0; player_id < 6; ++player_id) {
+			if (isPlayerFriend(player_id)) {
+				my_specialities[player_id] = (Specialty)i++;
+			}
+		}*/
 	}
 
 	free_robots.resize(game->planets.size());
@@ -233,4 +242,16 @@ int GameWrapper::getPlanetFreeWorkerPlace(int planet_id) const {
 	if (free_worker_place.find(planet_id) != free_worker_place.end())
 		return free_worker_place.at(planet_id);
 	return 0;
+}
+std::optional<Specialty> GameWrapper::getNextFreeSpecialty() const {
+	std::unordered_set<Specialty> not_used = {Specialty::LOGISTICS, Specialty::COMBAT, Specialty::PRODUCTION};
+	for (int player_id = 0; player_id < 6; ++player_id)
+		if (isPlayerFriend(player_id)) {
+			std::optional<Specialty> specialty = getPlayerSpecialty(player_id);
+			if (specialty.has_value())
+				not_used.erase(specialty.value());
+		}
+	if (not_used.empty())
+		return std::nullopt;
+	return *not_used.begin();
 }

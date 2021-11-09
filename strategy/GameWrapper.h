@@ -84,6 +84,9 @@ public:
 	inline void reservePlanetFreeWorkerPlace(int planet_id, int cnt) { free_worker_place[planet_id] -= cnt; }
 
 	inline int getPlayerStartingPlanet(int player_id) const { return player_starting_planet.at(player_id); }
+
+	// inline Specialty getPlannedSpeciality(int player_id) const { return my_specialities.at(player_id); }
+	std::optional<Specialty> getNextFreeSpecialty() const;
 private:
 	const Game* game;
 	std::unordered_map<int, int> player_starting_planet;
@@ -91,4 +94,6 @@ private:
 	std::vector<std::unordered_map<Resource, int>> free_resources;
 	std::unordered_map<int, int> available_flying_groups;
 	std::unordered_map<int, int> free_worker_place; // planet_id -> number of free worker place
+
+	// std::unordered_map<int, Specialty> my_specialities; // player_id -> Speciality
 };

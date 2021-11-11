@@ -37,7 +37,7 @@ private:
 		&Core::buildLogic,
 		&Core::deliveryLogic,
 		&Core::productionLogic,
-		// &Core::abandonLogic
+		&Core::abandonLogic
 	};
 	/*
 	 *  Битва

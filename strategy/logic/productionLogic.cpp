@@ -154,8 +154,20 @@ void Core::returnLogistics(int priority, GameWrapper &game_wrapper) {
 void Core::abandonLogic(int priority, GameWrapper& game_wrapper) {
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
+		// Если мы ничего не производим, то мы нужны для чего-то другого
+		if (!info.produceResource.has_value()) continue;
+		// проверяем, что мы не нужны для строительства чего-либо
+		const auto& my_requires = required_resources[info.produceResource.value()];
+		bool is_needed_for_building = std::find_if(my_requires.begin(),
+												   my_requires.end(),
+												   [](const std::pair<int, int>& p) { return p.second > 0; }) != my_requires.end();
+		if (is_needed_for_building) continue;
+
 		for (int planet_id: locations) {
+			// проверяем, что наш ресурс нужен на производстве
 			if (info.produceResource.has_value() && dependencies[info.produceResource.value()].empty()) {
+				// мы не нужны(
+				// отправляем роботов на репликатор
 				std::vector<int> replicators = building_locations[BuildingType::REPLICATOR];
 				if (!replicators.empty()) {
 					int random_replicator = replicators[(int) rand() % replicators.size()];

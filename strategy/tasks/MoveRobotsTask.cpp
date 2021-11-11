@@ -13,6 +13,9 @@ MoveRobotsTask::MoveRobotsTask(int planet_from, int planet_to, int robot_cnt, Sp
 bool MoveRobotsTask::reserve(GameWrapper &game_wrapper) {
 	if (next_launch_timer == 0) {
 		current_planet = next_arrival_planet;
+		if (game_wrapper.getEnemyBattlePower(current_planet)) {
+			return false;
+		}
 		if (current_planet == planet_to) {
 			return false;
 		}

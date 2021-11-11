@@ -7,31 +7,20 @@
 #include "../tasks/MoveResourceTask.h"
 #include "../tasks/WorkTask.h"
 
-std::unordered_map<Resource, BuildingType> resource_to_building_type = {
-	{Resource::STONE, BuildingType::QUARRY},
-	{Resource::ORE, BuildingType::MINES},
-	{Resource::ORGANICS, BuildingType::FARM},
-	{Resource::SAND, BuildingType::CAREER},
-
-	{Resource::ACCUMULATOR, BuildingType::ACCUMULATOR_FACTORY},
-	{Resource::CHIP, BuildingType::CHIP_FACTORY},
-	{Resource::METAL, BuildingType::FOUNDRY},
-	{Resource::PLASTIC, BuildingType::BIOREACTOR},
-	{Resource::SILICON, BuildingType::FURNACE}
-};
-
 void Core::updateDependencies(const GameWrapper& game_wrapper) {
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id : locations) {
-			auto building = game_wrapper.getBuilding(planet_id);
-			for (const auto&[needed_resource, amount] : info.buildResources)
-				if (!building.has_value()) {
+			// auto building = game_wrapper.getBuilding(planet_id);
+			// for (const auto&[needed_resource, amount] : info.buildResources)
+				/*if (!building.has_value()) {
 					std::cerr << "Building on the planet #" << planet_id << " is not built!" << std::endl;
-					dependencies[needed_resource].insert(planet_id);
+					if (required_resources[needed_resource][planet_id] > 0)
+						dependencies[needed_resource].insert(planet_id);
+					else dependencies[needed_resource].erase(planet_id);
 				} else {
 					dependencies[needed_resource].erase(planet_id);
-				}
+				}*/
 			for (const auto&[needed_resource, amount] : info.workResources) {
 				dependencies[needed_resource].insert(planet_id);
 			}
@@ -85,8 +74,6 @@ void Core::supplyingLogistics(int priority, GameWrapper &game_wrapper) {
 								}
 							}
 						}
-					} else {
-						std::cerr << "Too many resources on planet #" << consumer << std::endl;
 					}
 				}
 			}
@@ -173,11 +160,13 @@ void Core::abandonLogic(int priority, GameWrapper& game_wrapper) {
 				if (!replicators.empty()) {
 					int random_replicator = replicators[(int) rand() % replicators.size()];
 					for (Specialty sp: {Specialty::LOGISTICS, Specialty::COMBAT, Specialty::PRODUCTION}) {
-						addTask(new MoveRobotsTask(
-							planet_id, random_replicator,
-							game_wrapper.getMyFreeRobotCount(planet_id, sp),
-							sp
-						), priority, game_wrapper);
+						if (game_wrapper.getCurrentTick() > 10) {
+							addTask(new MoveRobotsTask(
+								planet_id, random_replicator,
+								game_wrapper.getMyFreeRobotCount(planet_id, sp),
+								sp
+							), priority, game_wrapper);
+						}
 					}
 				}
 			}

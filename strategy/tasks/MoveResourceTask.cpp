@@ -4,7 +4,7 @@
 #include "../graph.h"
 
 MoveResourceTask::MoveResourceTask(int planet_from, int planet_to, Resource resource, int resource_cnt, Specialty specialty) :
-	planet_to(planet_to), resource(resource),
+	planet_to(planet_to), resource(resource), departure_cnt(resource_cnt),
 	resource_cnt(resource_cnt), specialty(specialty), current_planet(planet_from) {
 	next_launch_timer = 0;
 	next_arrival_planet = planet_from;

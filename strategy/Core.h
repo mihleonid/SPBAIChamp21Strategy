@@ -35,8 +35,9 @@ private:
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
 		// &Core::destroyLogic,
 		&Core::buildLogic,
+		&Core::deliveryLogic,
 		&Core::productionLogic,
-		&Core::abandonLogic
+		// &Core::abandonLogic
 	};
 	/*
 	 *  Битва
@@ -49,6 +50,8 @@ private:
 	 */
 
 	std::unordered_map<BuildingType, std::vector<int>> building_locations;
+	// needed_resource -> {location -> amount}
+	std::unordered_map<Resource, std::unordered_map<int, int>> required_resources;
 	std::unordered_map<Resource, std::unordered_set<int>> dependencies;
 
 	void selectPlanets(const GameWrapper& game_wrapper);
@@ -69,4 +72,18 @@ private:
 	void workAssignment(int priority, GameWrapper& game_wrapper);
 	void returnLogistics(int priority, GameWrapper& game_wrapper);
 	void abandonLogic(int priority, GameWrapper &game_wrapper);
+	void deliveryLogic(int priority, GameWrapper &game_wrapper);
+
+	const std::unordered_map<Resource, BuildingType> resource_to_building_type = {
+		{Resource::STONE, BuildingType::QUARRY},
+		{Resource::ORE, BuildingType::MINES},
+		{Resource::ORGANICS, BuildingType::FARM},
+		{Resource::SAND, BuildingType::CAREER},
+
+		{Resource::ACCUMULATOR, BuildingType::ACCUMULATOR_FACTORY},
+		{Resource::CHIP, BuildingType::CHIP_FACTORY},
+		{Resource::METAL, BuildingType::FOUNDRY},
+		{Resource::PLASTIC, BuildingType::BIOREACTOR},
+		{Resource::SILICON, BuildingType::FURNACE}
+	};
 };

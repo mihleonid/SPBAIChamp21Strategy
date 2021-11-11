@@ -69,6 +69,10 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 
 			used[best_variant] = true;
 			building_locations[building_type].push_back(best_variant);
+			for (const auto&[needed_resource, amount] : building_property.buildResources) {
+				required_resources[needed_resource][best_variant] = amount;
+			}
+			// required_resources[Resource::STONE][10] = 100;
 		}
 	}
 }
@@ -76,6 +80,14 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 	if (building_locations.empty())
 		selectPlanets(game_wrapper);
+
+	for (const auto&[needed_resource, locations]: required_resources) {
+		for (const auto&[planet_id, amount]: locations) {
+			auto building = game_wrapper.getBuilding(planet_id);
+			if (building.has_value())
+				required_resources[needed_resource][planet_id] = 0;
+		}
+	}
 
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);

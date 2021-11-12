@@ -8,7 +8,7 @@
 
 void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 	for (const auto&[needed_resource, locations]: required_resources) {
-		std::cout << resourceToString(needed_resource) << " is requred by:" << std::endl;
+		// std::cout << resourceToString(needed_resource) << " is required by:" << std::endl;
 		std::set<std::pair<int, int>> sources; // {amount, planet_id}
 		for (int source_id : building_locations[resource_to_building_type.at(needed_resource)]) {
 			sources.emplace(game_wrapper.getResourceCount(source_id, needed_resource), source_id);
@@ -16,7 +16,7 @@ void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 		for (const auto&[planet_id, amount]: locations) {
 			std::cout << planet_id << ' ' << amount << std::endl;
 			if (amount > 0) {
-				int remain = amount - game_wrapper.getResourceCount(planet_id, needed_resource);
+				int remain = amount;
 				auto it = sources.rbegin();
 				while (remain > 0 && it != sources.rend()) {
 					// Выбираем специализацию для отправки
@@ -32,7 +32,7 @@ void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 								auto *new_task = new MoveResourceTask(it->second, planet_id, needed_resource, packet, specialty);
 								new_task->setOnDone([this](const MoveResourceTask& move_resource_task) {
 									required_resources[move_resource_task.getResource()]
-									[move_resource_task.getArrivalPlanet()] += move_resource_task.getPacketCount() + move_resource_task.getPacketLoss();
+									[move_resource_task.getArrivalPlanet()] += move_resource_task.getPacketLoss();
 								});
 								required_resources[needed_resource][planet_id] -= packet;
 								remain -= packet;

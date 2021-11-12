@@ -41,7 +41,7 @@ model::Action MoveResourceTask::toAction() const {
 		return Action({MoveAction(current_planet, next_arrival_planet, resource_cnt, resource)},
 					  std::vector<BuildingAction>(), std::nullopt);
 	else
-		return Action();
+		return {};
 }
 
 bool MoveResourceTask::hasStopped(const GameWrapper &game_wrapper) const {

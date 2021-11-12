@@ -1,11 +1,8 @@
 #include "MyStrategy.hpp"
 
-
 model::Action MyStrategy::getAction(const model::Game& game) {
 	if (Graph::getInstance() == nullptr)
 		Graph::init(game);
-	if (game.currentTick >= game.maxTickCount)
-		Graph::cleanup();
 
 	game_wrapper.update(game);
 
@@ -21,4 +18,8 @@ model::Action MyStrategy::getAction(const model::Game& game) {
 	}
 	result.chooseSpecialty = game_wrapper.getNextFreeSpecialty();
 	return result;
+}
+
+MyStrategy::~MyStrategy() {
+	Graph::cleanup();
 }

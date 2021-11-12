@@ -34,8 +34,7 @@ private:
 	// и они добавляют Task переданного приоритета
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
 		// &Core::destroyLogic,
-		&Core::buildLogic,
-		&Core::deliveryLogic,
+		&Core::establishingBuildings,
 		&Core::productionLogic,
 		&Core::abandonLogic
 	};
@@ -51,6 +50,7 @@ private:
 
 	std::unordered_map<BuildingType, std::vector<int>> building_locations;
 	// needed_resource -> {location -> amount}
+	// amount = необходимое - (уже есть на планете + в пути)
 	std::unordered_map<Resource, std::unordered_map<int, int>> required_resources;
 	std::unordered_map<Resource, std::unordered_set<int>> dependencies;
 
@@ -66,6 +66,11 @@ private:
 		supplyingLogistics(priority, game_wrapper);
 		workAssignment(priority, game_wrapper);
 		returnLogistics(priority, game_wrapper);
+	}
+
+	inline void establishingBuildings(int priority, GameWrapper& game_wrapper) {
+		buildLogic(priority, game_wrapper);
+		deliveryLogic(priority, game_wrapper);
 	}
 
 	void supplyingLogistics(int priority, GameWrapper& game_wrapper);

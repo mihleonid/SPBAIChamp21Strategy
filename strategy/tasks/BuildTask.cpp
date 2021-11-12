@@ -28,10 +28,10 @@ bool BuildTask::reserve(GameWrapper &game_wrapper) {
 }
 
 model::Action BuildTask::toAction() const {
-	if (will_execute_this_tick)
+	// if (will_execute_this_tick)
 		return model::Action(std::vector<MoveAction>(), {BuildingAction(planet_id, type)}, std::nullopt);
-	else
-		return model::Action();
+	// else
+		// return model::Action();
 }
 
 bool BuildTask::hasStopped(const GameWrapper &game_wrapper) const {

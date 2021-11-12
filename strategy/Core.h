@@ -80,6 +80,10 @@ private:
 	void abandonLogic(int priority, GameWrapper &game_wrapper);
 	void deliveryLogic(int priority, GameWrapper &game_wrapper);
 
+	std::unordered_map<int, bool> building_exists;
+
+	void requestBuilding(BuildingType building_type, int planet_id, const GameWrapper &game_wrapper);
+
 	const std::unordered_map<Resource, BuildingType> resource_to_building_type = {
 		{Resource::STONE, BuildingType::QUARRY},
 		{Resource::ORE, BuildingType::MINES},

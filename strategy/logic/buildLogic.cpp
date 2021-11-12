@@ -27,6 +27,14 @@ const static std::map<BuildingType, int> BUILDING_COUNT = {
 	{BuildingType::FARM, 1}
 };
 
+void Core::requestBuilding(BuildingType building_type, int planet_id, const GameWrapper& game_wrapper) {
+	BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
+	for (const auto&[needed_resource, amount] : info.buildResources) {
+		required_resources[needed_resource][planet_id] = amount;
+	}
+	building_locations[building_type].insert(planet_id);
+}
+
 void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 	for (int player_id = 0; player_id < 6; ++player_id) {
 		if (game_wrapper.isPlayerFriend(player_id)) {
@@ -67,8 +75,7 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 					best_variant = planet_id;
 				}
 			}
-
-			building_locations[building_type].insert(best_variant);
+			requestBuilding(building_type, best_variant, game_wrapper);
 		}
 	}
 }
@@ -81,11 +88,6 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id : locations) {
 			auto building = game_wrapper.getBuilding(planet_id);
-
-			// По умолчанию считаем, что все ресурсы для постройки здания уже есть
-			for (const auto&[needed_resource, amount] : info.buildResources) {
-				required_resources[needed_resource][planet_id] = 0;
-			}
 
 			if (building.has_value() && building.value().buildingType != building_type) {
 				for (Specialty specialty : {Specialty::COMBAT, Specialty::PRODUCTION, Specialty::LOGISTICS}) {
@@ -103,6 +105,11 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 				continue;
 			}
 
+			if (!building.has_value() && building_exists[planet_id]) {
+				requestBuilding(building_type, planet_id, game_wrapper);
+				building_exists[planet_id] = false;
+			}
+
 			if (game_wrapper.isEnoughResourcesToBuild(planet_id, building_type) ||
 				(building.has_value() && building->health < info.maxHealth)) {
 				// Выбираем специализацию для постройки
@@ -110,16 +117,13 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 					int player_id = game_wrapper.getMyPlayerIdBySpecialty(specialty);
 					if (!building.has_value() && player_id != -1) {
 						if (game_wrapper.getRobotCount(planet_id, player_id) > 0) {
+							building_exists[planet_id] = true;
 							addTask(new BuildTask(planet_id, building_type,
 												  game_wrapper.getRobotCount(planet_id, player_id),
 												  specialty), priority, game_wrapper);
 							break;
 						}
 					}
-				}
-			} else {
-				for (const auto&[needed_resource, amount] : info.buildResources) {
-					required_resources[needed_resource][planet_id] = amount;
 				}
 			}
 		}

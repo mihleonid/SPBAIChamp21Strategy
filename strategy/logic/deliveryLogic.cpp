@@ -44,7 +44,7 @@ void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 				}
 
 				if (remain > 0) {
-					int min_dist = (int)10e9;
+					int min_dist = (int)1e9;
 					int min_id = 0;
 					for (auto it = sources.begin(); it != sources.end(); ++it) {
 						int dist = Graph::getInstance()->distBySpecialty(planet_id, it->second, Specialty::COMBAT);

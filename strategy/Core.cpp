@@ -5,10 +5,9 @@ void Core::process(GameWrapper& game_wrapper) {
 	for (int priority = 0; priority < logic_priority.size(); ++priority) {
 		std::vector<Task*> to_remove;
 		for (Task* task : current_tasks[priority]) {
+			task->reserve(game_wrapper);
 			if (task->hasStopped(game_wrapper))
 				to_remove.push_back(task);
-			else
-				task->reserve(game_wrapper);
 		}
 		for (Task* task : to_remove) {
 			current_tasks[priority].erase(task);

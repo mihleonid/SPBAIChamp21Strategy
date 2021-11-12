@@ -8,6 +8,7 @@
 #include "tasks/DestroyTask.h"
 #include "tasks/BuildTask.h"
 #include "graph.h"
+#include "set"
 
 class Core {
 public:
@@ -48,7 +49,7 @@ private:
 	 *	Производство
 	 */
 
-	std::unordered_map<BuildingType, std::vector<int>> building_locations;
+	std::unordered_map<BuildingType, std::set<int>> building_locations;
 	// needed_resource -> {location -> amount}
 	// amount = необходимое - (уже есть на планете + в пути)
 	std::unordered_map<Resource, std::unordered_map<int, int>> required_resources;

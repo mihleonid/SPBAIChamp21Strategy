@@ -17,7 +17,7 @@ bool MoveRobotsTask::reserve(GameWrapper &game_wrapper) {
 			return false;
 		}
 		robot_cnt = std::min(game_wrapper.getMyFreeRobotCount(current_planet, specialty), robot_cnt);
-			game_wrapper.reserveMyRobots(current_planet, specialty, robot_cnt);
+		game_wrapper.reserveMyRobots(current_planet, specialty, robot_cnt);
 		if (game_wrapper.getPlayerAvailableFlyingGroups(game_wrapper.getMyPlayerIdBySpecialty(specialty)) > 0) {
 			game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
 

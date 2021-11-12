@@ -14,7 +14,7 @@ void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 			sources.emplace(game_wrapper.getResourceCount(source_id, needed_resource), source_id);
 		}
 		for (const auto&[planet_id, amount]: locations) {
-			std::cout << planet_id << ' ' << amount << std::endl;
+			// std::cout << planet_id << ' ' << amount << std::endl;
 			if (amount > 0) {
 				int remain = amount;
 				auto it = sources.rbegin();

@@ -118,16 +118,16 @@ void Core::returnLogistics(int priority, GameWrapper &game_wrapper) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id : locations) {
 			std::vector<int> suppliers;
-			for (const auto&[needed_resource, planets] : dependencies) {
-				// Находим, от чего зависит здание
-				if (planets.find(planet_id) == planets.end())
-					continue;
 
+			for (const auto&[needed_resource, amount] : info.workResources) {
 				BuildingType supplier_type = resource_to_building_type.at(needed_resource);
-				for (int supplier_planet : building_locations[supplier_type])
-					suppliers.push_back(supplier_planet);
+
+				auto it = building_locations[supplier_type].begin();
+				std::advance(it, (int)rand() % building_locations[supplier_type].size());
+				suppliers.push_back(*it);
 			}
-			if (suppliers.size() == 0) continue;
+
+			if (suppliers.empty()) continue;
 
 			int supplier_id = (int)rand() % suppliers.size();
 			int to_send = game_wrapper.getMyTeamFreeRobotCount(planet_id);

@@ -53,6 +53,8 @@ private:
 	// needed_resource -> {location -> amount}
 	// amount = необходимое - (уже есть на планете + в пути)
 	std::unordered_map<Resource, std::unordered_map<int, int>> required_resources;
+
+	// resource -> who need it for production
 	std::unordered_map<Resource, std::unordered_set<int>> dependencies;
 
 	void selectPlanets(const GameWrapper& game_wrapper);

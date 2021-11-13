@@ -9,16 +9,16 @@
 void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 	for (const auto&[needed_resource, locations]: required_resources) {
 		// std::cout << resourceToString(needed_resource) << " is required by:" << std::endl;
-		std::set<std::pair<int, int>> sources; // {amount, planet_id}
-		for (int source_id : building_locations[resource_to_building_type.at(needed_resource)]) {
-			sources.emplace(game_wrapper.getResourceCount(source_id, needed_resource), source_id);
-		}
+
 		for (const auto&[planet_id, amount]: locations) {
+			std::set<std::pair<int, int>> sources; // {amount, planet_id}
+			for (int source_id : building_locations[resource_to_building_type.at(needed_resource)]) {
+				sources.emplace(game_wrapper.getResourceCount(source_id, needed_resource), source_id);
+			}
 			// std::cout << planet_id << ' ' << amount << std::endl;
 			if (amount > 0) {
 				int remain = amount;
-				auto it = sources.rbegin();
-				while (remain > 0 && it != sources.rend()) {
+				for (auto it = sources.rbegin(); it != sources.rend() && remain > 0; it++) {
 					// Выбираем специализацию для отправки
 					for (Specialty specialty : {Specialty::LOGISTICS, Specialty::COMBAT, Specialty::PRODUCTION}) {
 						int player_id = game_wrapper.getMyPlayerIdBySpecialty(specialty);

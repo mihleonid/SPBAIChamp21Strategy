@@ -84,6 +84,13 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 	if (building_locations.empty())
 		selectPlanets(game_wrapper);
 
+	for (int planet_id : building_locations[BuildingType::QUARRY]) {
+		auto building = game_wrapper.getBuilding(planet_id);
+		if (building.has_value() && game_wrapper.getResourceCount(planet_id, Resource::STONE) > 0) {
+			game_wrapper.reserveResources(planet_id, Resource::STONE, std::min(250, game_wrapper.getResourceCount(planet_id, Resource::STONE)));
+		}
+	}
+
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id : locations) {

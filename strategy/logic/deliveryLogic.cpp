@@ -40,7 +40,6 @@ void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 							}
 						}
 					}
-					it++;
 				}
 
 				if (remain > 0) {

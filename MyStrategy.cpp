@@ -9,6 +9,9 @@ model::Action MyStrategy::getAction(const model::Game& game) {
 
 	game_wrapper.update(game);
 
+	if (!game.currentTick)
+		return Action();
+
 	core.process(game_wrapper);
 
 	Action result;

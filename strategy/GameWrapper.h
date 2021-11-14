@@ -89,6 +89,9 @@ public:
 
 	// inline Specialty getPlannedSpeciality(int player_id) const { return my_specialities.at(player_id); }
 	std::optional<Specialty> getNextFreeSpecialty() const;
+
+	int getOurTotalBattlePower() const;
+	int getEnemyTotalBattlePower() const;
 private:
 	const Game* game;
 	std::unordered_map<int, int> player_starting_planet;

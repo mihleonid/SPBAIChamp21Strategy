@@ -4,7 +4,7 @@
 
 void Core::attackLogic(int priority, GameWrapper& game_wrapper) {
 	std::set<std::pair<int, int>> enemy_planets;
-	if (game_wrapper.getMyTotalRobotCount() > game_wrapper.getEnemyTotalRobotCount() + 250) { // magic number
+	if (game_wrapper.getOurTotalBattlePower() > game_wrapper.getEnemyTotalBattlePower() + 250) { // magic number
 		for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
 			int enemies = 0;
 			int my = 0;

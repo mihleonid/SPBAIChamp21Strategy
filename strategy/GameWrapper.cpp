@@ -265,3 +265,33 @@ std::optional<Specialty> GameWrapper::getNextFreeSpecialty() const {
 		return std::nullopt;
 	return *not_used.begin();
 }
+
+int GameWrapper::getOurTotalBattlePower() const {
+	int res = 0;
+	for (int planet_id = 0; planet_id < game->planets.size(); planet_id++) {
+		res += getOurBattlePower(planet_id);
+	}
+	for (FlyingWorkerGroup flying_worker_group : game->flyingWorkerGroups) {
+		if (isPlayerFriend(flying_worker_group.playerIndex)) {
+			res += flying_worker_group.number;
+			if (getPlayerSpecialty(flying_worker_group.playerIndex) == Specialty::COMBAT)
+				res += flying_worker_group.number * game->combatUpgrade / 100;
+		}
+	}
+	return res;
+}
+
+int GameWrapper::getEnemyTotalBattlePower() const {
+	int res = 0;
+	for (int planet_id = 0; planet_id < game->planets.size(); planet_id++) {
+		res += getEnemyBattlePower(planet_id);
+	}
+	for (FlyingWorkerGroup flying_worker_group : game->flyingWorkerGroups) {
+		if (isPlayerEnemy(flying_worker_group.playerIndex)) {
+			res += flying_worker_group.number;
+			if (getPlayerSpecialty(flying_worker_group.playerIndex) == Specialty::COMBAT)
+				res += flying_worker_group.number * game->combatUpgrade / 100;
+		}
+	}
+	return res;
+}

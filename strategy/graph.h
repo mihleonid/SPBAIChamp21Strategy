@@ -1,6 +1,7 @@
 #pragma once
 #include "model/Game.hpp"
 #include <vector>
+#include <functional>
 
 class Graph {
 public:
@@ -12,6 +13,8 @@ public:
 	inline static Graph* getInstance() { return instance; }
 	inline static void init(const model::Game& game) { instance = new Graph(game); }
 	inline static void cleanup() { delete instance; }
+
+	void dijkstraDoWhile(int planet_id, model::Specialty specialty, const std::function<bool(int)> pred);
 private:
 	static Graph* instance;
 	Graph(const model::Game&);

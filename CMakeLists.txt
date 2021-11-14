@@ -77,7 +77,10 @@ set (SRC
 	"strategy/tasks/WorkTask.cpp"
 	"strategy/tasks/MoveRobotsTask.cpp"
 	"strategy/logic/deliveryLogic.cpp"
-	"strategy/logic/defendLogic.cpp" strategy/logic/attackLogic.cpp strategy/logic/battleLogic.cpp)
+	"strategy/logic/defendLogic.cpp"
+	"strategy/logic/attackLogic.cpp"
+	"strategy/logic/battleLogic.cpp"
+)
 
 # set(CMAKE_CXX_FLAGS " -g -ggdb -O0 -fsanitize=undefined -D_GLIBCXX_DEBUG ")
 # set(CMAKE_CXX_FLAGS " -O3 -DNDEBUG ")

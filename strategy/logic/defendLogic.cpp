@@ -13,8 +13,8 @@ void Core::defendLogic(int priority, GameWrapper& game_wrapper) {
 			continue;
 
 		if (std::find_if(building_locations.begin(), building_locations.end(),
-						 [flying_worker_group](const std::pair<BuildingType, std::set<int>>& entry)
-						 	{ return entry.second.find(flying_worker_group.targetPlanet) != entry.second.end(); }) !=
+						[flying_worker_group](const std::pair<BuildingType, std::set<int>>& entry)
+							{ return entry.second.find(flying_worker_group.targetPlanet) != entry.second.end(); }) !=
 						 building_locations.end()) {
 			double strength = flying_worker_group.number;
 			std::optional<Specialty> specialty = game_wrapper.getPlayerSpecialty(flying_worker_group.playerIndex);

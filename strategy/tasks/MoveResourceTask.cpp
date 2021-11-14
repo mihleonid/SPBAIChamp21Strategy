@@ -29,6 +29,8 @@ bool MoveResourceTask::reserve(GameWrapper &game_wrapper) {
 			next_arrival_planet = Graph::getInstance()->nextBySpecialty(current_planet, planet_to, specialty);
 			next_launch_timer = Graph::getInstance()->distBySpecialty(current_planet, next_arrival_planet, specialty) - 1;
 			will_launch_this_tick = true;
+		}else{
+			will_launch_this_tick = false;
 		}
 	} else {
 		next_launch_timer--;

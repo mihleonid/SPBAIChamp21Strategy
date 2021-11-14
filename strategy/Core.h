@@ -34,7 +34,8 @@ private:
 	// Функции ((int) -> void) выполняются в порядке, заданном в этом массиве,
 	// и они добавляют Task переданного приоритета
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
-		// &Core::destroyLogic,
+		&Core::battleLogic,
+		&Core::defendLogic,
 		&Core::establishingBuildings,
 		&Core::productionLogic,
 		&Core::abandonLogic
@@ -98,4 +99,7 @@ private:
 		{Resource::PLASTIC, BuildingType::BIOREACTOR},
 		{Resource::SILICON, BuildingType::FURNACE}
 	};
+	void defendLogic(int priority, GameWrapper &game_wrapper);
+	void battleLogic(int priority, GameWrapper &game_wrapper);
+	void send_to_replicator(int planet_id, int priority, GameWrapper &game_wrapper);
 };

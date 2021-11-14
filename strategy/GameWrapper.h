@@ -12,6 +12,8 @@ public:
 	void update(const Game &);
 
 	inline const std::vector<Planet> & getPlanets() const { return game->planets; }
+	inline const std::vector<FlyingWorkerGroup>& getFlyingWorkerGroups() const { return game->flyingWorkerGroups; }
+	inline int getCombatUpgrade() const { return game->combatUpgrade; }
 
 	int getRobotCount(int planet_id, int player_id) const;
 	int getFreeRobotCount(int planet_id, int player_id) const;

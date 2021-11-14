@@ -116,6 +116,11 @@ int GameWrapper::getMyTotalRobotCount() const {
 	int res = 0;
 	for (int i = 0; i < game->planets.size(); ++i)
 		res += getMyTeamRobotCount(i);
+	for (FlyingWorkerGroup flying_worker_group : game->flyingWorkerGroups) {
+		if (isPlayerFriend(flying_worker_group.playerIndex)) {
+			res += flying_worker_group.number;
+		}
+	}
 	return res;
 }
 int GameWrapper::getMyTotalFreeRobotCount() const {
@@ -129,6 +134,11 @@ int GameWrapper::getEnemyTotalRobotCount() const {
 	int res = 0;
 	for (int i = 0; i < game->planets.size(); ++i)
 		res += getEnemyTeamRobotCount(i);
+	for (FlyingWorkerGroup flying_worker_group : game->flyingWorkerGroups) {
+		if (isPlayerEnemy(flying_worker_group.playerIndex)) {
+			res += flying_worker_group.number;
+		}
+	}
 	return res;
 }
 int GameWrapper::getEnemyTotalFreeRobotCount() const {

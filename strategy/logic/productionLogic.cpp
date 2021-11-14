@@ -85,6 +85,22 @@ void Core::workAssignment(int priority, GameWrapper &game_wrapper) {
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id: locations) {
+			if (building_type == model::BuildingType::QUARRY) {
+				bool required_stone = false;
+				for (const auto& [_, amount] : required_resources[model::Resource::STONE]) {
+					if (amount > 0) {
+						required_stone = true;
+						break;
+					}
+				}
+				if (required_stone) {
+					for (Specialty specialty: {Specialty::PRODUCTION, Specialty::COMBAT, Specialty::LOGISTICS}) {
+						std::cerr << "Working on quarry " << game_wrapper.getMyFreeRobotCount(planet_id, specialty) << std::endl;
+						addTask(new WorkTask(planet_id, game_wrapper.getMyFreeRobotCount(planet_id, specialty), specialty),
+								priority, game_wrapper);
+					}
+				}
+			}
 			// Если производим то, что никому не нужно
 			if (info.produceResource.has_value() && dependencies[info.produceResource.value()].empty()) break;
 
@@ -153,7 +169,26 @@ void Core::returnLogistics(int priority, GameWrapper &game_wrapper) {
 	}
 }
 
-void Core::abandonLogic(int priority, GameWrapper& game_wrapper) {
+void Core::send_to_replicator(int planet_id, int priority, GameWrapper &game_wrapper) {
+	std::set<int> replicators = building_locations[BuildingType::REPLICATOR];
+	if (!replicators.empty()) {
+		auto it = replicators.begin();
+		std::advance(it, (int) rand() % replicators.size());
+		int random_replicator = *it;
+		for (Specialty sp: {Specialty::LOGISTICS, Specialty::COMBAT, Specialty::PRODUCTION}) {
+			if (game_wrapper.getCurrentTick() > 5) { // magic number
+				addTask(new MoveRobotsTask(
+					planet_id, random_replicator,
+					game_wrapper.getMyFreeRobotCount(planet_id, sp),
+					sp
+				), priority, game_wrapper);
+			}
+		}
+	}
+}
+
+void Core::abandonLogic(int priority, GameWrapper &game_wrapper) {
+	/*
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		// Если мы ничего не производим, то мы нужны для чего-то другого
@@ -171,22 +206,15 @@ void Core::abandonLogic(int priority, GameWrapper& game_wrapper) {
 				std::cerr << "Abandoned: " << planet_id << std::endl;
 				// мы не нужны(
 				// отправляем роботов на репликатор
-				std::set<int> replicators = building_locations[BuildingType::REPLICATOR];
-				if (!replicators.empty()) {
-					auto it = replicators.begin();
-					std::advance(it, (int) rand() % replicators.size());
-					int random_replicator = *it;
-					for (Specialty sp: {Specialty::LOGISTICS, Specialty::COMBAT, Specialty::PRODUCTION}) {
-						if (game_wrapper.getCurrentTick() > 10) {
-							addTask(new MoveRobotsTask(
-								planet_id, random_replicator,
-								game_wrapper.getMyFreeRobotCount(planet_id, sp),
-								sp
-							), priority, game_wrapper);
-						}
-					}
-				}
+				send_to_replicator(planet_id, priority, game_wrapper);
 			}
+		}
+	}
+	 */
+
+	for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
+		if (game_wrapper.getMyTeamFreeRobotCount(planet_id) > 0) {
+			send_to_replicator(planet_id, priority, game_wrapper);
 		}
 	}
 }

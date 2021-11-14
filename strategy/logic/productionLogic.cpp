@@ -85,7 +85,7 @@ void Core::workAssignment(int priority, GameWrapper &game_wrapper) {
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		for (int planet_id: locations) {
-			if (building_type == model::BuildingType::QUARRY) {
+			/*if (building_type == model::BuildingType::QUARRY) {
 				bool required_stone = false;
 				for (const auto& [_, amount] : required_resources[model::Resource::STONE]) {
 					if (amount > 0) {
@@ -100,7 +100,7 @@ void Core::workAssignment(int priority, GameWrapper &game_wrapper) {
 								priority, game_wrapper);
 					}
 				}
-			}
+			}*/
 			// Если производим то, что никому не нужно
 			if (info.produceResource.has_value() && dependencies[info.produceResource.value()].empty()) break;
 
@@ -191,7 +191,6 @@ void Core::send_to_replicator(int planet_id, int priority, GameWrapper &game_wra
 }
 
 void Core::abandonLogic(int priority, GameWrapper &game_wrapper) {
-	/*
 	for (const auto&[building_type, locations] : building_locations) {
 		BuildingProperties info = game_wrapper.getBuildingProperties(building_type);
 		// Если мы ничего не производим, то мы нужны для чего-то другого
@@ -213,11 +212,10 @@ void Core::abandonLogic(int priority, GameWrapper &game_wrapper) {
 			}
 		}
 	}
-	 */
-
+/*
 	for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
 		if (game_wrapper.getMyTeamFreeRobotCount(planet_id) > 0) {
 			send_to_replicator(planet_id, priority, game_wrapper);
 		}
-	}
+	}*/
 }

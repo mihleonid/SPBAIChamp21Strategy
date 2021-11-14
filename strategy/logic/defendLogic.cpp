@@ -25,6 +25,8 @@ void Core::defendLogic(int priority, GameWrapper& game_wrapper) {
 	}
 
 	for (const auto&[planet_id, enemy_strength] : endangered_planets) {
+		endangered_planets[planet_id] -= game_wrapper.getOurBattlePower(planet_id);
+		if (endangered_planets[planet_id] <= 0) continue;
 		std::set<std::pair<int, int>> other_planets;
 		for (const auto&[resource, locations]: building_locations) {
 			for (int building_planet_id: locations) {

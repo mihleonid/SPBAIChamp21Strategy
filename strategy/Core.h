@@ -36,7 +36,7 @@ private:
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
 		&Core::battleLogic,
 		&Core::destroyLogic,
-		&Core::attackLogic,
+		//&Core::attackLogic,
 		&Core::defendLogic,
 		&Core::establishingBuildings,
 		&Core::productionLogic,

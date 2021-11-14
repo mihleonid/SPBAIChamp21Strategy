@@ -36,7 +36,7 @@ void Core::attackLogic(int priority, GameWrapper& game_wrapper) {
 
 		int remain = it->first;
 
-		for (Specialty specialty : {Specialty::COMBAT, Specialty::LOGISTICS, Specialty::PRODUCTION}) {
+		for (Specialty specialty : {Specialty::COMBAT, Specialty::LOGISTICS}) {
 			for (const auto& [distance, from] : nearest_planets) {
 				int robots = game_wrapper.getMyFreeRobotCount(from, specialty);
 				int to_send = std::min(remain, robots);

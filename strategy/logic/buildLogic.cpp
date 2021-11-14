@@ -127,7 +127,8 @@ void Core::buildLogic(int priority, GameWrapper &game_wrapper) {
 						if (game_wrapper.getFreeRobotCount(planet_id, player_id) > 0) {
 							building_exists[planet_id] = true;
 							addTask(new BuildTask(planet_id, building_type,
-												  game_wrapper.getFreeRobotCount(planet_id, player_id) / 2,
+												  // game_wrapper.getFreeRobotCount(planet_id, player_id),
+												  100,
 												  specialty), priority, game_wrapper);
 							break;
 						}

@@ -8,6 +8,7 @@
 #include "tasks/DestroyTask.h"
 #include "tasks/BuildTask.h"
 #include "graph.h"
+#include "set"
 
 class Core {
 public:
@@ -34,7 +35,7 @@ private:
 	// и они добавляют Task переданного приоритета
 	const std::vector<std::function<void(Core&, int, GameWrapper&)>> logic_priority = {
 		// &Core::destroyLogic,
-		&Core::buildLogic,
+		&Core::establishingBuildings,
 		&Core::productionLogic,
 		&Core::abandonLogic
 	};
@@ -48,7 +49,12 @@ private:
 	 *	Производство
 	 */
 
-	std::unordered_map<BuildingType, std::vector<int>> building_locations;
+	std::unordered_map<BuildingType, std::set<int>> building_locations;
+	// needed_resource -> {location -> amount}
+	// amount = необходимое - (уже есть на планете + в пути)
+	std::unordered_map<Resource, std::unordered_map<int, int>> required_resources;
+
+	// resource -> who need it for production
 	std::unordered_map<Resource, std::unordered_set<int>> dependencies;
 
 	void selectPlanets(const GameWrapper& game_wrapper);
@@ -65,8 +71,31 @@ private:
 		returnLogistics(priority, game_wrapper);
 	}
 
+	inline void establishingBuildings(int priority, GameWrapper& game_wrapper) {
+		buildLogic(priority, game_wrapper);
+		deliveryLogic(priority, game_wrapper);
+	}
+
 	void supplyingLogistics(int priority, GameWrapper& game_wrapper);
 	void workAssignment(int priority, GameWrapper& game_wrapper);
 	void returnLogistics(int priority, GameWrapper& game_wrapper);
 	void abandonLogic(int priority, GameWrapper &game_wrapper);
+	void deliveryLogic(int priority, GameWrapper &game_wrapper);
+
+	std::unordered_map<int, bool> building_exists;
+
+	void requestBuilding(BuildingType building_type, int planet_id, const GameWrapper &game_wrapper);
+
+	const std::unordered_map<Resource, BuildingType> resource_to_building_type = {
+		{Resource::STONE, BuildingType::QUARRY},
+		{Resource::ORE, BuildingType::MINES},
+		{Resource::ORGANICS, BuildingType::FARM},
+		{Resource::SAND, BuildingType::CAREER},
+
+		{Resource::ACCUMULATOR, BuildingType::ACCUMULATOR_FACTORY},
+		{Resource::CHIP, BuildingType::CHIP_FACTORY},
+		{Resource::METAL, BuildingType::FOUNDRY},
+		{Resource::PLASTIC, BuildingType::BIOREACTOR},
+		{Resource::SILICON, BuildingType::FURNACE}
+	};
 };

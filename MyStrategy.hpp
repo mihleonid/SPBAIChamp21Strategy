@@ -8,6 +8,7 @@
 class MyStrategy {
 public:
     model::Action getAction(const model::Game& game);
+	~MyStrategy();
 private:
 	Core core;
 	GameWrapper game_wrapper;

@@ -3,8 +3,10 @@
 #include "algorithm"
 
 void Core::attackLogic(int priority, GameWrapper& game_wrapper) {
+	static bool is_attacking = false;
 	std::set<std::pair<int, int>> enemy_planets;
-	if (game_wrapper.getOurTotalBattlePower() > game_wrapper.getEnemyTotalBattlePower() + 250) { // magic number
+	if (game_wrapper.getOurTotalBattlePower() > game_wrapper.getEnemyTotalBattlePower() + 250 || is_attacking) { // magic number
+		is_attacking = true;
 		for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
 			int enemies = 0;
 			int my = 0;

@@ -93,7 +93,7 @@ void Core::workAssignment(int priority, GameWrapper &game_wrapper) {
 			for (const auto&[neededResource, amount]: info.workResources) {
 				can_produce = std::min(can_produce, game_wrapper.getResourceCount(planet_id, neededResource) / amount);
 			}
-			int working_robots = can_produce; //FIXME std::min(can_produce, info.maxWorkers);
+			int working_robots = can_produce * info.workAmount; //FIXME std::min(can_produce, info.maxWorkers);
 			// Распределяем по специальностям
 			for (Specialty specialty : {Specialty::PRODUCTION, Specialty::COMBAT, Specialty::LOGISTICS}) {
 				int player_id = game_wrapper.getMyPlayerIdBySpecialty(specialty);

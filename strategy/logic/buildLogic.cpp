@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "../Core.h"
 
 const static std::vector<std::pair<BuildingType, std::vector<std::pair<BuildingType, int>>>> BUILDING_DEPENDENCIES = {

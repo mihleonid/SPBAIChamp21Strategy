@@ -58,9 +58,9 @@ void Core::selectPlanets(const GameWrapper& game_wrapper) { // select my planets
 			for (int planet_id = 0; planet_id < game_wrapper.getPlanets().size(); ++planet_id) {
 				const Planet& planet = game_wrapper.getPlanets()[planet_id];
 				if (std::find_if(building_locations.begin(),
-								 building_locations.end(),
-								 [planet_id](const std::pair<BuildingType, std::set<int>>& v)
-								 	{return v.second.find(planet_id) != v.second.end();}) != building_locations.end() ||
+								building_locations.end(),
+								[planet_id](const std::pair<BuildingType, std::set<int>>& v)
+									{return v.second.find(planet_id) != v.second.end();}) != building_locations.end() ||
 				(building_property.harvest && planet.harvestableResource != building_property.produceResource))
 					continue;
 				int dst = 0;

@@ -3,12 +3,12 @@
 #include <map>
 #include <unordered_set>
 #include <functional>
+#include <set>
 #include "GameWrapper.h"
 #include "tasks/Task.h"
 #include "tasks/DestroyTask.h"
 #include "tasks/BuildTask.h"
 #include "graph.h"
-#include "set"
 
 class Core {
 public:

@@ -1,11 +1,11 @@
 #include "MyStrategy.hpp"
 
 model::Action MyStrategy::getAction(const model::Game& game) {
-	if (game.currentTick == 0)
-		return Action();
-
 	if (Graph::getInstance() == nullptr)
 		Graph::init(game);
+
+	if (game.currentTick == 0)
+		return Action();
 
 	game_wrapper.update(game);
 

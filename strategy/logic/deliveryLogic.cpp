@@ -66,6 +66,6 @@ void Core::deliveryLogic(int priority, GameWrapper& game_wrapper) {
 				}
 			}
 		}
-		std::cout<<std::endl;
+		//std::cout<<std::endl;
 	}
 }

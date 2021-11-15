@@ -205,7 +205,7 @@ void Core::abandonLogic(int priority, GameWrapper &game_wrapper) {
 		for (int planet_id: locations) {
 			// проверяем, что наш ресурс нужен на производстве
 			if (info.produceResource.has_value() && dependencies[info.produceResource.value()].empty()) {
-				std::cerr << "Abandoned: " << planet_id << std::endl;
+				//std::cerr << "Abandoned: " << planet_id << std::endl;
 				// мы не нужны(
 				// отправляем роботов на репликатор
 				send_to_replicator(planet_id, priority, game_wrapper);

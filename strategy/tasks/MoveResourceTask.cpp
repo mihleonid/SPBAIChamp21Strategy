@@ -1,6 +1,7 @@
 #include "MoveResourceTask.h"
 
 #include <algorithm>
+#include <iostream>
 #include "../graph.h"
 
 MoveResourceTask::MoveResourceTask(int planet_from, int planet_to, Resource resource, int resource_cnt, Specialty specialty) :
@@ -22,6 +23,9 @@ bool MoveResourceTask::reserve(GameWrapper &game_wrapper) {
 		resource_cnt = std::min({robot_cnt, resources, resource_cnt});
 		game_wrapper.reserveResources(current_planet, resource, resource_cnt);
 		game_wrapper.reserveMyRobots(current_planet, specialty, resource_cnt);
+		if(!game_wrapper.getPlayerAvailableFlyingGroups(game_wrapper.getMyPlayerIdBySpecialty(specialty))){
+			std::cout<<"Limit_reached"<<std::endl;
+		}
 		if (game_wrapper.getPlayerAvailableFlyingGroups(game_wrapper.getMyPlayerIdBySpecialty(specialty)) > 0 &&
 			game_wrapper.getEnemyBattlePower(current_planet) == 0) {
 			game_wrapper.addPlayerFlyingGroup(game_wrapper.getMyPlayerIdBySpecialty(specialty));
